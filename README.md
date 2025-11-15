@@ -1,4 +1,4 @@
-# student-management-system
+# Student-management-system
 
 This project is a Student Management System designed to facilitate the management of students, teachers, and administrators. It is built using Angular for the client-side and Node.js for the server-side.
 
