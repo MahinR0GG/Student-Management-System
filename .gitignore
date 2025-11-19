@@ -1,49 +1,53 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Virtual environment
+venv/
+env/
+*.env
 
-# Node
-/client/node_modules
-/student-backend/node_modules
-/client/.angular
-/client/.vscode
-/client/public
-/node_modules
-npm-debug.log
-yarn-error.log
-/student-backend/.env
+# Django migrations
+student_management_backend/api/migrations/
 
-# IDEs and editors
+# SQLite database
+*.sqlite3
+
+# Django static files
+static/
+
+# Media files
+media/
+
+# PyCharm or VS Code project files
 .idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+.vscode/
 
-# Visual Studio Code
-/client/.vscode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/client/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
+# OS-specific files
 .DS_Store
 Thumbs.db
+
+# Node.js dependencies
+node_modules/
+
+# Python distribution files
+*.egg-info/
+dist/
+build/
+
+# Log files
+*.log
+
+# IDE or editor specific files
+*.iml
+
+# Environment variable files
+*.env
+
+# Python test cache
+.pytest_cache/
+
+# Django settings secrets
+*.env
