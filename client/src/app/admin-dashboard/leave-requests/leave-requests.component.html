@@ -1,0 +1,73 @@
+<div class="leave-container">
+  <h2>Leave Requests</h2>
+
+  <!-- Filter Dropdown -->
+  <div class="filter-bar">
+    <label>Filter by:</label>
+    <select [(ngModel)]="leaveFilter">
+      <option value="students">Student Leaves</option>
+      <option value="teachers">Teacher Leaves</option>
+    </select>
+  </div>
+
+  <!-- ✅ Student Leave Requests -->
+  <div *ngIf="leaveFilter === 'students'">
+    <h3>Student Leave Requests</h3>
+
+    <table class="leave-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Class</th>
+          <th>Reason</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of studentLeaves">
+          <td>{{ s.student_name }}</td>
+          <td>N/A</td>
+          <td>{{ s.reason }}</td>
+          <td>{{ s.start_date | date }}</td>
+          <td>{{ s.end_date | date }}</td>
+          <td>
+            <span 
+              [ngClass]="{
+                'approved': s.status === 'Approved',
+                'pending': s.status === 'Pending',
+                'rejected': s.status === 'Rejected'
+              }"
+            >
+              {{ s.status }}
+            </span>
+          </td>
+
+          <td>
+            <button class="approve" 
+              (click)="approveStudent(s)" 
+              [disabled]="s.status !== 'Pending'">
+              Approve
+            </button>
+
+            <button class="reject" 
+              (click)="rejectStudent(s)" 
+              [disabled]="s.status !== 'Pending'">
+              Reject
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Teacher Leaves (COMMENTED)
+  <div *ngIf="leaveFilter === 'teachers'">
+    <h3>Teacher Leave Requests</h3>
+    ...
+  </div>
+  -->
+</div>

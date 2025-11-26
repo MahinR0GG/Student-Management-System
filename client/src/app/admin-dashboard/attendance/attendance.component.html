@@ -1,0 +1,168 @@
+<div class="attendance-container">
+
+  <h2 class="title">Attendance Records</h2>
+
+  <!-- ✅ Error -->
+  <div *ngIf="error" class="error-box">
+    {{ error }}
+  </div>
+
+  <!-- ✅ Loading -->
+  <div *ngIf="loading" class="loading-box">
+    Loading attendance...
+  </div>
+
+  <!-- ✅ Add Button -->
+  <div class="action-bar">
+    <button class="add-btn" (click)="openAddModal()">➕ Mark Attendance</button>
+  </div>
+
+  <!-- ✅ Filters -->
+  <div class="filters">
+
+    <input type="text" placeholder="🔍 Search student..." [(ngModel)]="search" />
+
+    <select [(ngModel)]="classFilter">
+      <option value="all">All Classes</option>
+      <option *ngFor="let c of classes">{{ c }}</option>
+    </select>
+
+    <select [(ngModel)]="divisionFilter">
+      <option value="all">All Divisions</option>
+      <option *ngFor="let d of divisions">{{ d }}</option>
+    </select>
+
+    <select [(ngModel)]="statusFilter">
+      <option value="all">All Status</option>
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+    </select>
+
+    <div class="date-filter">
+      <label>From:</label>
+      <input type="date" [(ngModel)]="dateFrom" />
+
+      <label>To:</label>
+      <input type="date" [(ngModel)]="dateTo" />
+    </div>
+
+    <button class="clear-btn" (click)="clearFilters()">Clear</button>
+
+  </div>
+
+  <!-- ✅ Stats -->
+  <div class="stats-row">
+    <div class="stat-box present">
+      <h3>{{ presentCount }}</h3>
+      <p>Present</p>
+    </div>
+
+    <div class="stat-box absent">
+      <h3>{{ absentCount }}</h3>
+      <p>Absent</p>
+    </div>
+
+    <div class="stat-box total">
+      <h3>{{ totalCount }}</h3>
+      <p>Total Records</p>
+    </div>
+  </div>
+
+  <!-- ✅ Attendance Table -->
+  <div class="table-wrapper" *ngIf="filtered.length > 0; else noRecords">
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Student</th>
+          <th>Class</th>
+          <th>Division</th>
+          <th>Status</th>
+          <th>Marked By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of filtered">
+          <td>{{ row.date }}</td>
+          <td>{{ row.student?.name }}</td>
+          <td>{{ row.className || row.class_name }}</td>
+          <td>{{ row.division }}</td>
+          <td>
+            <span class="tag" [ngClass]="row.status.toLowerCase()">
+              {{ row.status }}
+            </span>
+          </td>
+          <td>{{ row.teacher?.name || row.marked_by }}</td>
+          <td class="actions">
+            <button class="edit-btn" (click)="openEditModal(row)" title="Edit">✏️</button>
+            <button class="delete-btn" (click)="deleteAttendance(row.id)" title="Delete">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noRecords>
+    <p class="empty">No attendance records yet. Click "Mark Attendance" to add records.</p>
+  </ng-template>
+
+  <!-- ✅ ADD/EDIT MODAL -->
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>{{ editMode ? 'Edit Attendance' : 'Mark Attendance' }}</h3>
+        <button class="close-btn" (click)="closeModal()">✖</button>
+      </div>
+
+      <form (ngSubmit)="saveAttendance()" class="modal-body">
+
+        <!-- Student Selection -->
+        <div class="form-group">
+          <label>Student *</label>
+          <select [(ngModel)]="attendanceForm.studentId" name="student" required>
+            <option [ngValue]="null" disabled>Select Student</option>
+            <option *ngFor="let s of students" [ngValue]="s.id">
+              {{ s.name }} ({{ s.className }}{{ s.division }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" [(ngModel)]="attendanceForm.date" name="date" required />
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label>Status *</label>
+          <select [(ngModel)]="attendanceForm.status" name="status" required>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
+        </div>
+
+        <!-- Class (optional) -->
+        <div class="form-group">
+          <label>Class</label>
+          <input type="text" [(ngModel)]="attendanceForm.className" name="className" placeholder="e.g., 10" />
+        </div>
+
+        <!-- Division (optional) -->
+        <div class="form-group">
+          <label>Division</label>
+          <input type="text" [(ngModel)]="attendanceForm.division" name="division" placeholder="e.g., A" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="save-btn">{{ editMode ? 'Update' : 'Save' }}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

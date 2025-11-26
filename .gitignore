@@ -1,0 +1,47 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+*.env
+
+# SQLite database
+*.sqlite3
+
+# Django static files
+static/
+
+# Media files
+media/
+
+# PyCharm or VS Code project files
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Node.js dependencies
+node_modules/
+
+# Python distribution files
+*.egg-info/
+dist/
+build/
+
+# Log files
+*.log
+
+# IDE or editor specific files
+*.iml
+
+# Python test cache
+.pytest_cache/
+
+# Angular
+.angular/

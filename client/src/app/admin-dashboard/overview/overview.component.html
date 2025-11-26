@@ -1,0 +1,62 @@
+<div class="page">
+
+  <h2>Admin Dashboard</h2>
+  <p class="sub">School overview & insights</p>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <h3>{{ stats.students }}</h3>
+      <p>Students</p>
+    </div>
+    <div class="kpi-card">
+      <h3>{{ stats.teachers }}</h3>
+      <p>Teachers</p>
+    </div>
+    <div class="kpi-card">
+      <h3>{{ stats.classes }}</h3>
+      <p>Classes</p>
+    </div>
+    <div class="kpi-card">
+      <h3>{{ stats.attendanceToday }}</h3>
+      <p>Attendance Today</p>
+    </div>
+  </div>
+
+  <!-- CHART PLACEHOLDER BOXES -->
+  <div class="chart-row">
+    <div class="chart-box">
+      <h4>Attendance Trend</h4>
+      <div class="chart-placeholder">📈 Chart coming soon</div>
+    </div>
+    <div class="chart-box">
+      <h4>Exam Performance</h4>
+      <div class="chart-placeholder">📊 Chart coming soon</div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS + RECENT ACTIVITY -->
+  <div class="two-col">
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h4>Quick Actions</h4>
+      <div class="actions-list">
+        <a *ngFor="let act of quickActions" [routerLink]="act.link" class="quick-btn">
+          {{ act.text }} →
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent">
+      <h4>Recent Activity</h4>
+      <ul>
+        <li *ngFor="let a of recentActivity">
+          {{ a.text }} <span class="time">{{ a.time }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

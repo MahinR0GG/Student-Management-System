@@ -1,0 +1,111 @@
+<div class="manage-users">
+  <h2 class="title">👥 Manage Users</h2>
+
+  <div class="filter-bar">
+    <input type="text" [(ngModel)]="searchTerm" class="search-box" placeholder="Search..." />
+
+    <select [(ngModel)]="roleFilter" class="filter-select">
+      <option value="all">All</option>
+      <option value="admin">Admin</option>
+      <option value="teacher">Teacher</option>
+      <option value="student">Student</option>
+    </select>
+
+    <button class="add-btn" (click)="openAdd()">➕ Add User</button>
+  </div>
+
+  <!-- ✅ Add User Form -->
+  <div *ngIf="isAddFormVisible" class="add-user-form">
+    <h3>Add New {{ selectedRole | titlecase }}</h3>
+
+    <form (ngSubmit)="addUser()" class="form-container">
+      
+      <div class="form-group">
+        <label>Name</label>
+        <input name="name" [(ngModel)]="user.name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input name="email" [(ngModel)]="user.email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" [(ngModel)]="user.password" required />
+      </div>
+
+      <div class="form-group">
+        <label>Role</label>
+        <select [(ngModel)]="selectedRole" name="role" (change)="onRoleChange($event)">
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- ✅ If role = Teacher → subject selection -->
+      <div *ngIf="selectedRole === 'teacher'" class="form-group">
+        <label>Select Subject</label>
+        <select name="subject" [(ngModel)]="user.subject" required>
+          <option value="" disabled>Select Subject</option>
+          <option *ngFor="let s of subjects" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <!-- ✅ If role = Student → class + division -->
+      <div *ngIf="selectedRole === 'student'">
+
+        <!-- ✅ CLASS FIXED (8,9,10) -->
+        <div class="form-group">
+          <label>Class</label>
+          <select [(ngModel)]="user.classNumber" name="classNumber" required>
+            <option [ngValue]="null" disabled>Select Class</option>
+            <option [ngValue]="8">8</option>
+            <option [ngValue]="9">9</option>
+            <option [ngValue]="10">10</option>
+          </select>
+        </div>
+
+        <!-- ✅ DIVISION FIXED (A,B,C) -->
+        <div class="form-group">
+          <label>Division</label>
+          <select [(ngModel)]="user.division" name="division" required>
+            <option [ngValue]="null" disabled>Select Division</option>
+            <option [ngValue]="'A'">A</option>
+            <option [ngValue]="'B'">B</option>
+            <option [ngValue]="'C'">C</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button class="save-btn">💾 Save</button>
+    </form>
+  </div>
+
+  <!-- ✅ USERS TABLE -->
+  <div class="table-wrapper" *ngIf="filteredUsers.length; else noUsers">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Details</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let u of filteredUsers; let i = index">
+          <td>{{ i+1 }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role | titlecase }}</td>
+          <td>{{ getUserDetails(u) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noUsers>
+    <p>No users found</p>
+  </ng-template>
+</div>

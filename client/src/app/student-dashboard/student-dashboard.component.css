@@ -1,0 +1,713 @@
+/* --- Base & Layout --- */
+:host {
+  display: block;
+  min-height: 100vh;
+  /* Softer pastel-friendly background */
+  background: linear-gradient(135deg, #f8f9fe 0%, #eef2f8 100%);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+  /* New base text color, softer than black */
+  color: #4a4762;
+}
+
+/* =====================================
+  Header Bar (Pastel Theme)
+===================================== */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem; /* Made header slimmer */
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.08); /* Pastel shadow */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo-container h4 {
+  margin: 0;
+  color: #8a63d2;
+  font-weight: 700;
+}
+
+/* News Banner (Pastel Theme) */
+.news-banner {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 2rem; /* Give it space from logo and icons */
+}
+
+.scrolling-text-container {
+  display: inline-block;
+  will-change: transform;
+  /* Ensure container is wide enough for animation */
+  padding-left: 100%;
+}
+
+.scrolling-text {
+  margin: 0;
+  display: inline-block;
+  /* No padding-right needed with container padding */
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #5a5a7d; /* Darker pastel text */
+  animation: scroll-left 30s linear infinite;
+}
+
+
+@keyframes scroll-left {
+  0% { transform: translateX(0%); } /* Start with text visible on right */
+  100% { transform: translateX(-200%); } /* Scroll completely off left */
+}
+
+
+/* User actions (Pastel Theme) */
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-btn,
+.logout-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.profile-btn:hover,
+.logout-btn:hover {
+  background: #f4f0fa; /* Light pastel hover */
+  transform: scale(1.1);
+}
+.profile-btn svg,
+.logout-btn svg {
+  width: 24px;
+  height: 24px;
+  /* New pastel icon color */
+  stroke: #8a63d2;
+}
+.profile-btn svg {
+  fill: #8a63d2;
+  stroke: none;
+}
+
+/* =====================================
+  New Dashboard Body
+===================================== */
+.dashboard-body-container {
+  /* *** REMOVED max-width and margin: 0 auto *** */
+  padding: 2rem; /* Keep padding */
+}
+
+
+/* =====================================
+  1. Full-Width Profile Banner
+===================================== */
+.profile-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: linear-gradient(110deg, #8a63d2, #a079e0);
+  color: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 25px rgba(138, 99, 210, 0.2);
+  opacity: 0; /* Start hidden for animation */
+  animation: scaleInFadeIn 0.5s ease-out forwards;
+  animation-delay: 0.05s; /* Staggered delay */
+}
+.profile-banner-icon {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.profile-banner-icon svg {
+  width: 40px;
+  height: 40px;
+  fill: #ffffff;
+}
+.profile-banner-details h2 {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+  font-size: 1.75rem;
+}
+.profile-banner-details p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* =====================================
+  2. Full-Width Filter Bar
+===================================== */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.08);
+  margin-bottom: 1.5rem;
+  opacity: 0; /* Start hidden for animation */
+  animation: scaleInFadeIn 0.5s ease-out 0.1s forwards; /* Staggered delay */
+}
+.filter-bar label { font-weight: 600; color: #4a4762; }
+.filter-bar select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  flex-grow: 1;
+  max-width: 400px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.filter-bar select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+  outline: none;
+}
+
+/* =====================================
+  3. NEW 3-Column Dashboard Grid (No Gaps)
+===================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(auto, auto);
+  gap: 1.5rem;
+  /* *** ADDED: Helps fill gaps if widget heights vary *** */
+  /* grid-auto-flow: dense; - Decided against this for now to keep order strict */
+}
+
+
+/* --- Widget Base (Pastel Theme) --- */
+.widget {
+  background: #ffffff;
+  border-radius: 16px; /* More rounded */
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.08); /* Softer pastel shadow */
+  padding: 1.5rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex; /* Use flexbox for internal alignment */
+  flex-direction: column; /* Stack header and content vertically */
+
+  /* NEW: Scale-in animation */
+  opacity: 0;
+  animation: scaleInFadeIn 0.5s ease-out forwards;
+}
+
+
+.widget:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(138, 99, 210, 0.12); /* Stronger pastel shadow */
+}
+
+.widget h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a4762; /* New text color */
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  /* New pastel accent border */
+  border-bottom: 2px solid #8a63d2;
+  padding-bottom: 0.75rem;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* Staggered animation delay for grid widgets */
+.dashboard-grid .widget:nth-child(1) { animation-delay: 0.15s; } /* Attendance */
+.dashboard-grid .widget:nth-child(2) { animation-delay: 0.2s; }  /* Grades */
+.dashboard-grid .widget:nth-child(3) { animation-delay: 0.25s; } /* Leave */
+.dashboard-grid .widget:nth-child(4) { animation-delay: 0.3s; }  /* Assignments */
+.dashboard-grid .widget:nth-child(5) { animation-delay: 0.35s; } /* Teacher */
+.dashboard-grid .widget:nth-child(6) { animation-delay: 0.4s; }  /* Events */
+
+
+/* =====================================
+  Grid Widget Layout & Alignment
+===================================== */
+/* Row 1:
+  - Attendance (1 col)
+  - Grades (2 col)
+*/
+.grades-chart {
+  grid-column: span 2;
+}
+/* Row 2:
+  - Leave (1 col)
+  - Assignments (2 col)
+*/
+.assignments {
+  grid-column: span 2;
+}
+
+/* Row 3:
+  - Teacher (1 col)
+  - Events (2 col)
+*/
+.events {
+  grid-column: span 2;
+}
+
+/* =====================================
+  Specific Widget Styles (Pastel Theme)
+===================================== */
+
+.chart-container {
+  height: 300px; /* Reduced height slightly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1; /* Allow chart container to fill space */
+  min-height: 0; /* Fix flexbox overflow issue */
+}
+
+canvas { max-height: 100%; max-width: 100%; }
+
+.assignment-list, .event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Allow lists to fill space */
+  overflow-y: auto; /* Add scroll if content overflows */
+  max-height: 300px; /* Limit height for scroll example */
+}
+
+.assignment-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fdfdff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+.assignment-card:hover {
+  border-left: 4px solid #68d3b1; /* Mint green */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transform: scale(1.02);
+}
+.icon-folder { font-size: 1.5rem; }
+.assignment-details { flex: 1; }
+.assignment-details h4 { margin: 0; font-size: 0.95rem; font-weight: 600; }
+.assignment-details p { margin: 0.25rem 0 0; font-size: 0.9rem; color: #5a5a7d; }
+.assignment-details p span { font-weight: 600; color: #e57373; } /* Softer red */
+.status-badge {
+  background: #fff0c2;
+  color: #a67c00;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.5rem; /* Space before Gemini button */
+}
+
+/* Gemini Button Styles */
+.btn-gemini {
+  background: linear-gradient(135deg, #a079e0, #8a63d2); /* Pastel purple gradient */
+  border: none;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1; /* Center the sparkle */
+  box-shadow: 0 2px 5px rgba(138, 99, 210, 0.3);
+}
+.btn-gemini:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.4);
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+.event-item:hover {
+  background: #fdfdff;
+  transform: scale(1.02);
+}
+.event-icon {
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.event-item:hover .event-icon {
+  transform: rotate(-15deg) scale(1.1);
+}
+/* Softer pastel versions */
+.event-item.exam .event-icon { background: #fde8e8; color: #e57373; }
+.event-item.event .event-icon { background: #e0fbf4; color: #68d3b1; }
+.event-details p { margin: 0; font-size: 0.9rem; color: #5a5a7d; }
+.event-details p strong { color: #4a4762; }
+
+.teacher-contact .contact-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.teacher-contact .contact-icon { font-size: 2.5rem; }
+.teacher-contact .contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.teacher-contact h4 { margin: 0; font-size: 1rem; }
+.teacher-contact p { margin: 0; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.teacher-contact .icon { font-size: 1rem; }
+.teacher-contact a { text-decoration: none; color: #8a63d2; word-break: break-all; }
+.teacher-contact a:hover { text-decoration: underline; }
+
+.leave-request p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #5a5a7d;
+  margin-bottom: 1rem;
+}
+.btn-primary {
+  background-color: #8a63d2; /* Pastel purple */
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: auto; /* Push button to bottom */
+}
+.btn-primary:hover {
+  background-color: #714dbf; /* Darker purple */
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.3);
+  transform: translateY(-2px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+  flex-grow: 1; /* Allow empty state to fill space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =====================================
+  Modal Styles (Pastel Theme)
+===================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(40, 38, 61, 0.6); /* Dark purple overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+  transform: scale(0.95);
+  animation: slideIn 0.3s ease-out forwards;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #4a4762;
+}
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-close:hover { color: #333; transform: rotate(90deg); }
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #5a5a7d;
+}
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-group input[type="date"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+  outline: none;
+}
+.form-group textarea {
+  resize: vertical;
+}
+
+.leave-history {
+  margin-top: 2rem;
+}
+.leave-history h4 {
+  font-size: 1.1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+.leave-history ul {
+  list-style-type: none;
+  padding: 0;
+}
+.leave-history li {
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+.leave-history li:nth-child(even) { background: #f9f9f9; }
+.leave-history li span {
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+/* Softer pastel status colors */
+.leave-history li span.status-pending { background: #fff0c2; color: #a67c00; }
+.leave-history li span.status-approved { background: #e0fbf4; color: #3c8d6d; }
+.leave-history li span.status-rejected { background: #fde8e8; color: #c85a5a; }
+
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+}
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover { background-color: #5a6268; }
+
+/* NEW: Profile Modal styles (Pastel) */
+.profile-modal {
+  max-width: 350px;
+}
+.profile-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+.profile-modal-body .profile-icon-large {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #8a63d2; /* Pastel purple */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.profile-modal-body .profile-icon-large svg {
+  width: 60px;
+  height: 60px;
+  fill: #ffffff;
+}
+.profile-modal-body h4 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #4a4762;
+}
+.profile-modal-body p {
+  margin: 0;
+  font-size: 1rem;
+  color: #5a5a7d;
+}
+
+/* Gemini Helper Modal Styles */
+.helper-modal {
+  max-width: 600px; /* Slightly wider */
+}
+.helper-modal .modal-header h3 {
+  font-size: 1.2rem; /* Smaller header */
+}
+.helper-content {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #5a5a7d;
+}
+.helper-content br { /* Add space after line breaks */
+    content: "";
+    display: block;
+    margin-bottom: 0.5em; /* Adjust spacing as needed */
+}
+.helper-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+.helper-content li {
+  margin-bottom: 0.5rem;
+}
+.loading-indicator {
+  text-align: center;
+  padding: 2rem;
+}
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #8a63d2; /* Purple */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto 0;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* --- Modal Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- Base Animation --- */
+@keyframes scaleInFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns */
+  }
+  /* Make these span full width */
+  .grades-chart,
+  .assignments,
+  .events,
+  .teacher-contact, /* Adjust teacher contact too */
+  .leave-request { /* Adjust leave request too */
+    grid-column: 1 / -1;
+  }
+  .attendance-chart {
+      grid-column: 1 / -1; /* Make attendance full width too for balance */
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .news-banner {
+    width: 100%;
+    border-top: 1px solid #eee;
+    margin: 0;
+  }
+  .scrolling-text {
+    padding: 0.75rem;
+    animation-duration: 20s; /* Speed up on mobile */
+  }
+  .user-actions {
+    padding-left: 0;
+    align-self: flex-end;
+  }
+  .dashboard-body-container {
+    padding: 1rem;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* 1 column */
+  }
+  /* All widgets span 1 column */
+  .widget, .grades-chart, .assignments, .events, .teacher-contact, .leave-request, .attendance-chart {
+    grid-column: 1 / -1;
+  }
+  .chart-container {
+    height: 250px;
+  }
+}

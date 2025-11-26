@@ -1,0 +1,26 @@
+.role-select-container {
+  margin: 100px auto;
+  padding: 30px;
+  width: 400px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.role-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  margin-top: 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #4a62ff;
+  color: white;
+  transition: 0.3s;
+}
+
+.role-btn:hover {
+  background: #374ad9;
+}

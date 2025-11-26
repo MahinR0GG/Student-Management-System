@@ -1,0 +1,124 @@
+.leave-container {
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Title */
+.leave-container h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #8a63d2;
+  margin-bottom: 1.2rem;
+}
+
+/* Filter dropdown */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar label {
+  font-weight: 600;
+  color: #4a4762;
+}
+
+.filter-bar select {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  transition: 0.25s;
+}
+
+.filter-bar select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.25);
+}
+
+/* Card wrapper like teacher dashboard */
+.leave-section-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.12);
+  margin-bottom: 2rem;
+}
+
+/* Card Headers */
+.leave-section-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #8a63d2;
+  margin-bottom: 1rem;
+}
+
+/* Table Style */
+.leave-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #4a4762;
+  font-size: 0.95rem;
+}
+
+.leave-table th,
+.leave-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.leave-table th {
+  color: #8a63d2;
+  font-weight: 700;
+  text-align: left;
+  background: #f8f6ff;
+}
+
+/* Buttons */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.approve {
+  background: #68d3b1;
+  color: white;
+}
+
+.reject {
+  background: #e57373;
+  color: white;
+}
+
+.assign {
+  background: #8a63d2;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Select substitute teacher */
+select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1c7f3;
+  background: #fdfdff;
+}
+
+select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+}

@@ -1,0 +1,238 @@
+<!-- =====================================
+  NEW: Top Header Bar
+  This contains the banner, profile, and logout buttons.
+===================================== -->
+<header class="dashboard-header">
+  <div class="header-logo-container">
+    <h4>Student Portal</h4>
+  </div>
+
+  <!-- Running News Banner (integrated into header) -->
+  <div class="news-banner">
+    <div class="scrolling-text-container">
+      <p class="scrolling-text">{{ schoolNews }}</p>
+    </div>
+  </div>
+
+  <!-- User Actions (Profile & Logout) -->
+  <div class="user-actions">
+    <!-- Profile Button (opens modal) -->
+    <button (click)="toggleProfileModal()" class="profile-btn" title="View Profile">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    
+    <!-- Logout Button -->
+    <button (click)="logout()" class="logout-btn" title="Logout">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Main Dashboard Body (with top-down layout) -->
+<div class="dashboard-body-container">
+
+  <!-- 1. Full-Width Profile Banner -->
+  <div class="profile-banner">
+    <div class="profile-banner-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.9999 10.414C13.2828 10.414 14.3333 9.36349 14.3333 8.08064C14.3333 6.79778 13.2828 5.74729 11.9999 5.74729C10.717 5.74729 9.6665 6.79778 9.6665 8.08064C9.6665 9.36349 10.717 10.414 11.9999 10.414Z" />
+        <path d="M11.9999 1.98389C6.46886 1.98389 1.98389 6.46886 1.98389 11.9999C1.98389 17.531 6.46886 22.0159 11.9999 22.0159C17.531 22.0159 22.0159 17.531 22.0159 11.9999C22.0159 6.46886 17.531 1.98389 11.9999 1.98389ZM11.9999 20.0159C10.1983 20.0159 8.4838 19.4479 7.10051 18.4259C7.10051 18.4259 8.35821 15.2289 11.9999 15.2289C15.6416 15.2289 16.8993 18.4259 16.8993 18.4259C15.516 19.4479 13.8015 20.0159 11.9999 20.0159ZM18.2381 17.2079C18.2381 17.2079 16.7333 13.2289 11.9999 13.2289C7.2665 13.2289 5.76172 17.2079 5.76172 17.2079C4.41214 15.6416 3.65054 13.676 3.65054 11.5303C3.65054 10.1554 3.9679 8.84711 4.54585 7.69033C5.64531 9.47143 7.82471 10.7473 10.2776 10.7473H10.414H13.5858C16.0387 10.7473 18.2181 9.47143 19.3176 7.69033C19.8955 8.84711 20.2129 10.1554 20.2129 11.5303C20.2129 13.676 19.4513 15.6416 18.2381 17.2079Z" />
+      </svg>
+    </div>
+    <div class="profile-banner-details" *ngIf="profile">
+      <h2>Welcome Back, {{ profile.name }}!</h2>
+      <p>Class: {{ profile.class }} | Roll No: {{ profile.rollNo }}</p>
+    </div>
+  </div>
+
+  <!-- 2. Full-Width Filter Bar -->
+  <div class="filter-bar">
+    <label for="subjectFilter">Filter by Subject</label>
+    <select id="subjectFilter" [(ngModel)]="selectedSubject" (change)="filterDashboard()">
+      <option *ngFor="let subject of subjects" [value]="subject">
+        {{ subject }}
+      </option>
+    </select>
+  </div>
+
+  <!-- 3. NEW 3-Column Widget Grid -->
+  <div class="dashboard-grid">
+
+    <!-- Attendance Chart -->
+    <div class="widget attendance-chart">
+      <h3>Attendance</h3>
+      <div class="chart-container">
+        <canvas id="attendancePieChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Grades Chart (Spans 2 columns) -->
+    <div class="widget grades-chart">
+      <h3>
+        Grades
+        <span *ngIf="selectedSubject !== 'All'"> - {{ selectedSubject }}</span>
+      </h3>
+      <div class="chart-container">
+        <canvas id="gradesBarChart"></canvas>
+      </div>
+      <div *ngIf="displayedMarks.length === 0" class="empty-state">
+        <p>No marks found for this subject.</p>
+      </div>
+    </div>
+
+    <!-- Leave Management -->
+    <div class="widget leave-request">
+      <h3>Leave Management</h3>
+      <p>You have {{ pastLeaveRequests.length }} previous requests. Apply for new leave.</p>
+      <button class="btn-primary" (click)="openLeaveModal()">Apply for Leave</button>
+    </div>
+
+    <!-- Assignments List (Spans 2 columns) -->
+    <div class="widget assignments">
+      <h3>
+        Upcoming Assignments
+        <span *ngIf="selectedSubject !== 'All'"> - {{ selectedSubject }}</span>
+      </h3>
+      <div class="assignment-list" *ngIf="displayedHomeworks.length > 0; else noHomework">
+        <div class="assignment-card" *ngFor="let hw of displayedHomeworks">
+          <div class="icon-folder">📁</div>
+          <div class="assignment-details">
+            <h4>{{ hw.title }}</h4>
+            <p>Due: <span>{{ hw.dueDate | date }}</span></p>
+          </div>
+          <span class="status-badge">To-Do</span>
+        </div>
+      </div>
+      <ng-template #noHomework>
+        <div class="empty-state">
+          <p>No assignments found for this subject.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Teacher Contact Widget -->
+    <div class="widget teacher-contact" *ngIf="displayedTeacherContact">
+      <h3>{{ displayedTeacherContact.title }}</h3>
+      <div class="contact-card">
+        <div class="contact-icon">👨‍🏫</div>
+        <div class="contact-details">
+          <h4>{{ displayedTeacherContact.name }}</h4>
+          <p><span class="icon">✉️</span> <a [href]="'mailto:' + displayedTeacherContact.email">{{ displayedTeacherContact.email }}</a></p>
+          <p><span class="icon">📞</span> <a [href]="'tel:' + displayedTeacherContact.mobile">{{ displayedTeacherContact.mobile }}</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="widget events">
+      <h3>
+        Upcoming Events & Exams
+        <span *ngIf="selectedSubject !== 'All'"> - {{ selectedSubject }}</span>
+      </h3>
+      <div class="event-list" *ngIf="displayedExams.length > 0; else noEvents">
+        <div class="event-item exam" *ngFor="let exam of displayedExams">
+          <div class="event-icon">📅</div>
+          <div class="event-details">
+            <p><strong>{{ exam.title }}</strong></p>
+            <p>{{ exam.date | date: 'fullDate' }}</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #noEvents>
+        <div class="empty-state">
+          <p>No events found for this subject.</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </div> <!-- End of Dashboard Grid -->
+
+</div> <!-- End of Body Container -->
+
+
+<!-- =====================================
+  MODALS
+===================================== -->
+
+<!-- New Profile Modal (for Personal Info) -->
+<div class="modal-overlay" *ngIf="isProfileModalOpen" (click)="toggleProfileModal()">
+  <div class="modal-content profile-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Profile</h3>
+      <button (click)="toggleProfileModal()" class="btn-close">&times;</button>
+    </div>
+    <div class="modal-body profile-modal-body" *ngIf="profile">
+      <div class="profile-icon-large">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.9999 10.414C13.2828 10.414 14.3333 9.36349 14.3333 8.08064C14.3333 6.79778 13.2828 5.74729 11.9999 5.74729C10.717 5.74729 9.6665 6.79778 9.6665 8.08064C9.6665 9.36349 10.717 10.414 11.9999 10.414Z" />
+          <path d="M11.9999 1.98389C6.46886 1.98389 1.98389 6.46886 1.98389 11.9999C1.98389 17.531 6.46886 22.0159 11.9999 22.0159C17.531 22.0159 22.0159 17.531 22.0159 11.9999C22.0159 6.46886 17.531 1.98389 11.9999 1.98389ZM11.9999 20.0159C10.1983 20.0159 8.4838 19.4479 7.10051 18.4259C7.10051 18.4259 8.35821 15.2289 11.9999 15.2289C15.6416 15.2289 16.8993 18.4259 16.8993 18.4259C15.516 19.4479 13.8015 20.0159 11.9999 20.0159ZM18.2381 17.2079C18.2381 17.2079 16.7333 13.2289 11.9999 13.2289C7.2665 13.2289 5.76172 17.2079 5.76172 17.2079C4.41214 15.6416 3.65054 13.676 3.65054 11.5303C3.65054 10.1554 3.9679 8.84711 4.54585 7.69033C5.64531 9.47143 7.82471 10.7473 10.2776 10.7473H10.414H13.5858C16.0387 10.7473 18.2181 9.47143 19.3176 7.69033C19.8955 8.84711 20.2129 10.1554 20.2129 11.5303C20.2129 13.676 19.4513 15.6416 18.2381 17.2079Z" />
+        </svg>
+      </div>
+      <h4>{{ profile.name }}</h4>
+      <p>Class: {{ profile.class }}</p>
+      <p>Roll No: {{ profile.rollNo }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Leave Request Modal -->
+<div class="modal-overlay" *ngIf="isLeaveModalOpen" (click)="closeLeaveModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Apply for Leave</h3>
+      <button (click)="closeLeaveModal()" class="btn-close">&times;</button>
+    </div>
+    <form (ngSubmit)="submitLeaveRequest()">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="leaveReason">Reason</label>
+          <select id="leaveReason" name="leaveReason" [(ngModel)]="leaveRequest.reason" required>
+            <option value="" disabled>Select a reason</option>
+            <option value="Sick Leave">Sick Leave</option>
+            <option value="Family Function">Family Function</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" name="startDate" [(ngModel)]="leaveRequest.startDate" required>
+        </div>
+        <div class="form-group">
+          <label for="endDate">End Date</label>
+          <input type="date" id="endDate" name="endDate" [(ngModel)]="leaveRequest.endDate" required>
+        </div>
+        <div class="form-group">
+          <label for="leaveDetails">Details (Optional)</label>
+          <textarea id="leaveDetails" name="leaveDetails" rows="3" [(ngModel)]="leaveRequest.details"></textarea>
+        </div>
+        
+        <div class="leave-history">
+          <h4>Your Past Requests</h4>
+          <ul *ngIf="pastLeaveRequests.length > 0; else noRequests">
+            <li *ngFor="let req of pastLeaveRequests">
+              {{ req.start_date | date }} - {{ req.reason }}
+              <span [ngClass]="{
+                'status-pending': req.status === 'Pending',
+                'status-approved': req.status === 'Approved',
+                'status-rejected': req.status === 'Rejected'
+              }">{{ req.status }}</span>
+            </li>
+          </ul>
+          <ng-template #noRequests><p>You have no past leave requests.</p></ng-template>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeLeaveModal()">Cancel</button>
+        <button type="submit" class="btn-primary">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+

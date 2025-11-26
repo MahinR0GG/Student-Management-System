@@ -1,0 +1,67 @@
+<div class="subjects-container">
+
+  <h2 class="title">📚 Manage Subjects</h2>
+  <p class="subtitle">Assign subjects to teachers</p>
+
+  <!-- ✅ Add Subject Form Card -->
+  <div class="form-card">
+    <h3 class="section-title">➕ Add New Subject</h3>
+
+    <form (ngSubmit)="addSubject()" class="subject-form">
+
+      <!-- ✅ Teacher Dropdown -->
+      <div class="form-group">
+        <label>Teacher</label>
+        <select [(ngModel)]="newSubject.teacherId" name="teacher" required>
+          <option value="" disabled selected>Select Teacher</option>
+          <option *ngFor="let t of teachers" [value]="t.id">
+            {{ t.name }} ({{ t.subject }})
+          </option>
+        </select>
+      </div>
+
+      <!-- ✅ Display Selected Teacher's Subject -->
+      <div class="form-group" *ngIf="newSubject.teacherId">
+        <label>Subject to Add</label>
+        <input type="text" [value]="getTeacherSubject(newSubject.teacherId)" disabled class="subject-display" />
+      </div>
+
+      <button type="submit" class="add-btn" [disabled]="!newSubject.teacherId">💾 Add Subject</button>
+    </form>
+
+    <p *ngIf="message" class="success">{{ message }}</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+  </div>
+
+  <!-- ✅ Subjects Table -->
+  <div class="table-card">
+    <h3 class="section-title">📖 Subjects List</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Subject</th>
+          <th>Teacher</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of subjects; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.class_teacher?.name || s.teacher?.name || "—" }}</td>
+          <td>
+            <button class="delete-btn" (click)="deleteSubject(s.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="empty" *ngIf="subjects.length === 0">No subjects added yet 😕</p>
+  </div>
+
+</div>

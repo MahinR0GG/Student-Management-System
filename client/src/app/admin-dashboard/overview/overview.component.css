@@ -1,0 +1,119 @@
+.page {
+  padding: 2rem;
+  background: #f7f8fc;
+  min-height: 100vh;
+}
+
+h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #4a4762;
+}
+
+.sub {
+  color: #74748d;
+  margin-bottom: 1.5rem;
+}
+
+/*** KPI CARDS ***/
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: white;
+  padding: 1.4rem;
+  border-radius: 15px;
+  text-align: center;
+  border: 1px solid #ececf6;
+  box-shadow: 0 10px 30px rgba(138,99,210,.1);
+}
+
+.kpi-card h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #6b4cd9;
+  font-weight: 700;
+}
+
+/*** CHART CARDS ***/
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.chart-box {
+  background: white;
+  padding: 1rem;
+  border-radius: 15px;
+  border: 1px solid #ececf6;
+}
+
+.chart-placeholder {
+  border: 1px dashed #b8b7d2;
+  height: 180px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/*** QUICK ACTION & ACTIVITY ***/
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.quick-actions, .recent {
+  background: white;
+  border-radius: 15px;
+  padding: 1rem;
+  border: 1px solid #ececf6;
+}
+
+.quick-btn {
+  display: block;
+  padding: 0.6rem;
+  margin-bottom: .4rem;
+  background: #f0edff;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #5b42d7;
+  text-decoration: none;
+  transition: .2s;
+}
+
+.quick-btn:hover {
+  background: #e5e0ff;
+}
+
+.recent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent li {
+  padding: .5rem 0;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.recent li:last-child {
+  border: none;
+}
+
+.time {
+  float: right;
+  color: #999;
+  font-size: .8rem;
+}

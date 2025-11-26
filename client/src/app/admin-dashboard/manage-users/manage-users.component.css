@@ -1,0 +1,214 @@
+/* ---------------------------------------------
+ ✅ FILTER BAR (Search + Role + Add User)
+--------------------------------------------- */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd3ff;
+  background: #f8faff;
+  width: 240px;
+}
+
+.filter-select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd3ff;
+  background: #f8faff;
+}
+
+.add-btn {
+  background: #1976ff;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-btn:hover {
+  background: #0f5fe0;
+}
+
+/* ---------------------------------------------
+ ✅ MODAL POPUP (Add User Form)
+--------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal {
+  background: #fff;
+  width: 450px;
+  border-radius: 14px;
+  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  padding: 15px 20px;
+  background: #1976ff;
+  color: #fff;
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Form layout inside modal */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd3ff;
+  background: #f8faff;
+  transition: 0.25s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4a62ff;
+  background: #fff;
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 15px 20px;
+}
+
+.cancel-btn,
+.create-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-btn {
+  background: #e5e5e5;
+}
+
+.create-btn {
+  background: #1976ff;
+  color: #fff;
+}
+
+/* ---------------------------------------------
+ ✅ TABLE STYLING
+--------------------------------------------- */
+.table-wrapper {
+  width: 100%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+thead {
+  background: #f3f6ff;
+}
+
+thead th {
+  padding: 14px 10px;
+  text-align: left;
+  color: #2a3f8c;
+  font-weight: 600;
+  border-bottom: 2px solid #dfe6ff;
+}
+
+tbody tr {
+  transition: 0.25s;
+}
+
+tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eef2ff;
+  color: #333;
+}
+
+tbody tr:hover {
+  background: #f8faff;
+}
+
+tbody td:first-child {
+  font-weight: 600;
+  color: #4758b8;
+}
+
+.no-users-text {
+  text-align: center;
+  padding: 40px;
+  color: #7a7a7a;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 14px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px;
+  }
+}
