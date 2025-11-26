@@ -12,11 +12,11 @@ import { ApiService } from '../services/api.service';   // ✅ Correct path
   styleUrls: ['./class-teacher-dashboard.component.css'],
 })
 export class ClassTeacherDashboardComponent implements OnInit {
-  
+
   constructor(
     private router: Router,
     private api: ApiService   // ✅ Works now
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadTeacherInfo();
@@ -42,13 +42,13 @@ export class ClassTeacherDashboardComponent implements OnInit {
 
   loadTeacherInfo() {
     const user = JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}');
-    
+
     if (!user || !user.id) {
       console.error('User not found in storage');
       this.router.navigate(['/login']);
       return;
     }
-    
+
     this.teacherId = user.id;
     this.teacherName = user.name;
 
@@ -56,7 +56,7 @@ export class ClassTeacherDashboardComponent implements OnInit {
     this.api.getClassTeacherDashboard(this.teacherId).subscribe({
       next: (dashboardData: any) => {
         console.log('Dashboard data received:', dashboardData);
-        
+
         if (!dashboardData.class) {
           console.error('No class found for this teacher');
           this.isClassTeacher = false;
@@ -64,9 +64,9 @@ export class ClassTeacherDashboardComponent implements OnInit {
           this.router.navigate(['/teacher/role-select']);
           return;
         }
-        
+
         this.isClassTeacher = true;
-        
+
         // Class Information
         this.classInfo = dashboardData.class;
         this.classId = dashboardData.class.id;
@@ -76,28 +76,33 @@ export class ClassTeacherDashboardComponent implements OnInit {
           email: dashboardData.teacher.email,
           role: dashboardData.teacher.role
         };
-        
+
         // Students
         this.students = dashboardData.students || [];
         this.totalStudents = dashboardData.total_students || 0;
-        
-        // Attendance
+
+        // Attendance - calculate absent today
         this.presentToday = dashboardData.present_today || 0;
-        
+        this.absentToday = this.totalStudents - this.presentToday;
+
         // Leave Requests
         this.leaveRequests = dashboardData.pending_leaves || [];
-        
+
         // Events
         this.events = dashboardData.events || [];
-        
+
         // Subjects
+        this.subjectsData = dashboardData.subjects || [];
         if (dashboardData.subjects && dashboardData.subjects.length > 0) {
           this.subjectList = ['All Subjects', ...dashboardData.subjects.map((s: any) => s.name)];
         }
-        
+
+        // Initialize filtered subjects for academic view
+        this.updateFilteredSubjects();
+
         // Load marks for this class
         this.loadMarksForClass();
-        
+
         console.log('Dashboard loaded successfully');
       },
       error: (err) => {
@@ -129,27 +134,27 @@ export class ClassTeacherDashboardComponent implements OnInit {
     let filtered = this.students.filter(s =>
       s.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-    
+
     // Sort the filtered students
     filtered.sort((a, b) => {
       let aVal = a[this.sortColumn];
       let bVal = b[this.sortColumn];
-      
+
       if (aVal == null) aVal = '';
       if (bVal == null) bVal = '';
-      
+
       if (typeof aVal === 'string') {
         aVal = aVal.toLowerCase();
         bVal = (bVal as string).toLowerCase();
       }
-      
+
       let comparison = 0;
       if (aVal < bVal) comparison = -1;
       if (aVal > bVal) comparison = 1;
-      
+
       return this.sortOrder === 'asc' ? comparison : -comparison;
     });
-    
+
     return filtered;
   }
 
@@ -168,7 +173,7 @@ export class ClassTeacherDashboardComponent implements OnInit {
 
   saveStudentEdit() {
     if (!this.editingStudent) return;
-    
+
     const updateData = {
       name: this.editingStudent.name,
       email: this.editingStudent.email,  // Include email (required by serializer)
@@ -176,7 +181,7 @@ export class ClassTeacherDashboardComponent implements OnInit {
       className: this.editingStudent.className,
       division: this.editingStudent.division,
     };
-    
+
     this.api.updateUser(this.editingStudent.id, updateData).subscribe({
       next: () => {
         // Update the local students array
@@ -232,12 +237,12 @@ export class ClassTeacherDashboardComponent implements OnInit {
     this.api.markAttendance(data).subscribe({
       next: (response: any) => {
         console.log('Attendance saved response:', response);
-        // Update attendance counts
+        // Update attendance counts immediately
         this.presentToday = this.students.filter(s => s.present).length;
-        this.absentToday = this.students.filter(s => !s.present).length;
+        this.absentToday = this.totalStudents - this.presentToday;
         this.attendanceDateForDisplay = this.selectedDate;
         alert('Attendance saved successfully!');
-        // Reload dashboard to show updated stats
+        // Reload dashboard to get fresh stats from server
         this.loadTeacherInfo();
       },
       error: (err) => {
@@ -315,17 +320,13 @@ export class ClassTeacherDashboardComponent implements OnInit {
   subjectFilter: string = 'All';
   filteredSubjects: any[] = [];
 
-  // Subjects data is loaded from dashboard endpoint
-  // No separate loadTeacherSubjects() needed
-
   loadMarksForClass() {
     if (!this.classId) return;
-    
+
     this.api.getMarksByClass(this.classId).subscribe({
       next: (response: any) => {
         console.log('Marks data received:', response);
         this.marksData = response.marks || [];
-        // Reorganize marks by student and subject
         this.processMarksData();
       },
       error: (err) => {
@@ -338,21 +339,43 @@ export class ClassTeacherDashboardComponent implements OnInit {
   processMarksData() {
     // Group marks by student
     const marksMap = new Map();
-    
+
     this.marksData.forEach((mark: any) => {
-      if (!marksMap.has(mark.student_id)) {
-        const student = this.students.find(s => s.id === mark.student_id);
-        marksMap.set(mark.student_id, {
-          studentId: mark.student_id,
+      if (!marksMap.has(mark.student)) {
+        const student = this.students.find(s => s.id === mark.student);
+        marksMap.set(mark.student, {
+          studentId: mark.student,
           studentName: mark.student_name || student?.name || 'Unknown',
-          rollNo: student?.rollNo || '',
+          rollNo: student?.id || '',
           marks: []
         });
       }
-      marksMap.get(mark.student_id).marks.push(mark);
+      marksMap.get(mark.student).marks.push(mark);
     });
-    
+
     this.studentsMarks = Array.from(marksMap.values());
+  }
+
+  get filteredMarksData() {
+    let filtered = this.marksData;
+
+    if (this.selectedSubjectView !== 'All Subjects') {
+      filtered = filtered.filter(m => m.subject_name === this.selectedSubjectView);
+    }
+
+    if (this.selectedExamView !== 'All Exams') {
+      filtered = filtered.filter(m => m.exam_type === this.selectedExamView);
+    }
+
+    return filtered;
+  }
+
+  updateFilteredSubjects() {
+    if (this.subjectFilter === 'All') {
+      this.filteredSubjects = this.subjectsData;
+    } else {
+      this.filteredSubjects = this.subjectsData.filter(s => s.name === this.subjectFilter);
+    }
   }
 
   // ====================================

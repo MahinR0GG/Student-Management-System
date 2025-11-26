@@ -451,3 +451,198 @@ button:hover {
     width: 100%;
   }
 }
+
+/* ===============================
+   ASSIGNMENT MANAGEMENT STYLES
+=============================== */
+.assignment-form {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+  border: 1px solid #f0eefc;
+  margin-bottom: 2rem;
+}
+
+.assignment-form h3 {
+  color: #8a63d2;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+
+.form-row {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row label {
+  font-weight: 600;
+  color: #6f61a8;
+  font-size: 0.95rem;
+}
+
+.input-field,
+.textarea-field,
+.class-select,
+.exam-select {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input-field:focus,
+.textarea-field:focus,
+.class-select:focus,
+.exam-select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.textarea-field {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.assignments-list {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+  border: 1px solid #f0eefc;
+}
+
+.assignments-list h3 {
+  color: #8a63d2;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+
+.assignment-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #4a4762;
+}
+
+.assignment-table th,
+.assignment-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.assignment-table th {
+  color: #8a63d2;
+  font-weight: 600;
+  background-color: #faf9ff;
+  font-size: 0.95rem;
+}
+
+.assignment-table tr:hover td {
+  background-color: #f9f7ff;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #9e9eb3;
+  font-size: 1.1rem;
+}
+
+.no-data-message p {
+  margin: 0;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  color: #8a63d2;
+  font-size: 1.1rem;
+}
+
+.save-marks-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.remarks-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1c7f3;
+  border-radius: 6px;
+}
+
+.remarks-input:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+/* Profile Panel */
+.profile-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+  border: 1px solid #f0eefc;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-panel h2 {
+  color: #8a63d2;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+  text-align: center;
+}
+
+.profile-row {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f0eefc;
+  display: flex;
+  gap: 1rem;
+}
+
+.profile-row:last-child {
+  border-bottom: none;
+}
+
+.profile-row strong {
+  color: #6f61a8;
+  min-width: 120px;
+}
+
+.sidebar-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6f61a8;
+}

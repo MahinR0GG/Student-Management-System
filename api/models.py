@@ -205,3 +205,95 @@ class Event(models.Model):
     def __str__(self):
         return f"{self.title} - {self.date}"
 
+# Mark Model
+class Mark(models.Model):
+    EXAM_TYPE_CHOICES = [
+        ('Unit Test 1', 'Unit Test 1'),
+        ('Unit Test 2', 'Unit Test 2'),
+        ('Mid Term', 'Mid Term'),
+        ('Unit Test 3', 'Unit Test 3'),
+        ('Final Exam', 'Final Exam'),
+    ]
+    
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='marks',
+        limit_choices_to={'role': 'student'}
+    )
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        related_name='marks'
+    )
+    exam_type = models.CharField(max_length=50, choices=EXAM_TYPE_CHOICES)
+    marks_obtained = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    total_marks = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        default=100
+    )
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    remarks = models.CharField(max_length=255, null=True, blank=True)
+    class_name = models.CharField(max_length=10)
+    division = models.CharField(max_length=1, null=True, blank=True)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='marks_created',
+        limit_choices_to={'role': 'teacher'}
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'marks'
+        unique_together = [['student', 'subject', 'exam_type']]
+    
+    def save(self, *args, **kwargs):
+        # Auto-calculate percentage
+        if self.marks_obtained is not None and self.total_marks:
+            self.percentage = (self.marks_obtained / self.total_marks) * 100
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.student.name} - {self.subject.name} - {self.exam_type}"
+
+# Assignment Model
+class Assignment(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Assigned', 'Assigned'),
+        ('Completed', 'Completed'),
+    ]
+    
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    due_date = models.DateField()
+    class_name = models.CharField(max_length=10)
+    division = models.CharField(max_length=1, null=True, blank=True)
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        related_name='assignments',
+        null=True,
+        blank=True
+    )
+    teacher = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='assignments_created',
+        limit_choices_to={'role': 'teacher'}
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Assigned')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'assignments'
+    
+    def __str__(self):
+        return f"{self.title} - {self.class_name}{self.division or ''}"
+

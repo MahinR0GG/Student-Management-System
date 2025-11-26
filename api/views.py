@@ -1,13 +1,15 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from django.contrib.auth import authenticate
 from django.db.models import Q
-from .models import User, Class, Attendance, Leave, Subject, Event
+from datetime import date
+from .models import User, Class, Attendance, Leave, Subject, Event, Mark, Assignment
 from .serializers import (
     UserSerializer, LoginSerializer, ClassSerializer,
-    AttendanceSerializer, LeaveSerializer, SubjectSerializer, EventSerializer
+    AttendanceSerializer, LeaveSerializer, SubjectSerializer, EventSerializer,
+    MarkSerializer, AssignmentSerializer
 )
 
 # Authentication Views
@@ -139,19 +141,73 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Attendance.objects.all()
         student_id = self.request.query_params.get('student')
-        date = self.request.query_params.get('date')
+        date_param = self.request.query_params.get('date')
         class_name = self.request.query_params.get('className')
         
         if student_id:
             queryset = queryset.filter(student_id=student_id)
-        if date:
-            queryset = queryset.filter(date=date)
+        if date_param:
+            queryset = queryset.filter(date=date_param)
         if class_name:
             queryset = queryset.filter(class_name=class_name)
         
         return queryset.order_by('-date')
+    
+    @action(detail=False, methods=['post'])
+    def bulk_mark(self, request):
+        """Bulk mark attendance for multiple students"""
+        class_id = request.data.get('classId')
+        teacher_id = request.data.get('teacherId')
+        attendance_date = request.data.get('date')
+        records = request.data.get('records', [])
+        
+        if not all([class_id, teacher_id, attendance_date, records]):
+            return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            class_obj = Class.objects.get(id=class_id)
+            teacher = User.objects.get(id=teacher_id, role='teacher')
+            class_name = f"{class_obj.class_number}"
+            division = class_obj.division
+            
+            created_count = 0
+            updated_count = 0
+            
+            for record in records:
+                student_id = record.get('studentId')
+                is_present = record.get('present', True)
+                
+                attendance, created = Attendance.objects.update_or_create(
+                    student_id=student_id,
+                    date=attendance_date,
+                    defaults={
+                        'teacher': teacher,
+                        'status': 'Present' if is_present else 'Absent',
+                        'class_name': class_name,
+                        'division': division,
+                        'marked_by': teacher.name
+                    }
+                )
+                
+                if created:
+                    created_count += 1
+                else:
+                    updated_count += 1
+            
+            return Response({
+                'message': 'Attendance marked successfully',
+                'created': created_count,
+                'updated': updated_count
+            }, status=status.HTTP_200_OK)
+            
+        except Class.DoesNotExist:
+            return Response({'error': 'Class not found'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+# Leave ViewSet
 class LeaveViewSet(viewsets.ModelViewSet):
     queryset = Leave.objects.all()
     serializer_class = LeaveSerializer
@@ -169,47 +225,9 @@ class LeaveViewSet(viewsets.ModelViewSet):
         
         return queryset.order_by('-created_at')
     
-    def create(self, request, *args, **kwargs):
-        print("LEAVE CREATE RAW DATA:", request.data)
-
-        serializer = self.get_serializer(data=request.data)
-        print(serializer.initial_data)
-        serializer.is_valid(raise_exception=True)
-
-        # 🔍 See what DRF actually passes to the model
-        print("LEAVE VALIDATED DATA:", serializer.validated_data)
-
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
     def partial_update(self, request, *args, **kwargs):
-        print(request.data)
         kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
-
-# Leave ViewSet
-# class LeaveViewSet(viewsets.ModelViewSet):
-#     queryset = Leave.objects.all()
-#     serializer_class = LeaveSerializer
-#     permission_classes = [AllowAny]
-    
-#     def get_queryset(self):
-#         queryset = Leave.objects.all()
-#         student_id = self.request.query_params.get('student')
-#         status_filter = self.request.query_params.get('status')
-        
-#         if student_id:
-#             queryset = queryset.filter(student_id=student_id)
-#         if status_filter:
-#             queryset = queryset.filter(status=status_filter)
-        
-#         return queryset.order_by('-created_at')
-    
-#     # ✅ Allow partial updates via PATCH
-#     def partial_update(self, request, *args, **kwargs):
-#         kwargs['partial'] = True
-#         return super().update(request, *args, **kwargs)
 
 # Subject ViewSet
 class SubjectViewSet(viewsets.ModelViewSet):
@@ -243,3 +261,168 @@ class EventViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(Q(audience='ALL') | Q(class_name=class_name))
         
         return queryset.order_by('-date')
+
+# Mark ViewSet
+class MarkViewSet(viewsets.ModelViewSet):
+    queryset = Mark.objects.all()
+    serializer_class = MarkSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        queryset = Mark.objects.all()
+        student_id = self.request.query_params.get('student')
+        class_name = self.request.query_params.get('className')
+        subject_id = self.request.query_params.get('subject')
+        exam_type = self.request.query_params.get('exam_type')
+        
+        if student_id:
+            queryset = queryset.filter(student_id=student_id)
+        if class_name:
+            queryset = queryset.filter(class_name=class_name)
+        if subject_id:
+            queryset = queryset.filter(subject_id=subject_id)
+        if exam_type:
+            queryset = queryset.filter(exam_type=exam_type)
+        
+        return queryset.order_by('-created_at')
+    
+    @action(detail=False, methods=['get'])
+    def by_class(self, request):
+        """Get all marks for a specific class"""
+        class_id = request.query_params.get('class_id')
+        if not class_id:
+            return Response({'error': 'class_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            class_obj = Class.objects.get(id=class_id)
+            class_name = f"{class_obj.class_number}"
+            division = class_obj.division
+            
+            marks = Mark.objects.filter(class_name=class_name, division=division)
+            serializer = self.get_serializer(marks, many=True)
+            return Response({'marks': serializer.data}, status=status.HTTP_200_OK)
+        except Class.DoesNotExist:
+            return Response({'error': 'Class not found'}, status=status.HTTP_404_NOT_FOUND)
+
+# Assignment ViewSet
+class AssignmentViewSet(viewsets.ModelViewSet):
+    queryset = Assignment.objects.all()
+    serializer_class = AssignmentSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        queryset = Assignment.objects.all()
+        class_name = self.request.query_params.get('className')
+        division = self.request.query_params.get('division')
+        teacher_id = self.request.query_params.get('teacher')
+        subject_id = self.request.query_params.get('subject')
+        
+        if class_name:
+            queryset = queryset.filter(class_name=class_name)
+        if division:
+            queryset = queryset.filter(division=division)
+        if teacher_id:
+            queryset = queryset.filter(teacher_id=teacher_id)
+        if subject_id:
+            queryset = queryset.filter(subject_id=subject_id)
+        
+        return queryset.order_by('-created_at')
+
+# Custom Dashboard Endpoints
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def class_teacher_dashboard(request):
+    """Get all data for class teacher dashboard"""
+    teacher_id = request.query_params.get('teacher_id')
+    
+    if not teacher_id:
+        return Response({'error': 'teacher_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        teacher = User.objects.get(id=teacher_id, role='teacher')
+        
+        # Find class where this teacher is class teacher
+        try:
+            class_obj = Class.objects.get(class_teacher_id=teacher_id)
+        except Class.DoesNotExist:
+            return Response({'error': 'Teacher is not assigned as a class teacher'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Get students in this class
+        class_name = str(class_obj.class_number)
+        division = class_obj.division
+        students = User.objects.filter(role='student', className=class_name, division=division)
+        
+        # Get today's attendance
+        today = date.today()
+        today_attendance = Attendance.objects.filter(
+            class_name=class_name,
+            division=division,
+            date=today
+        )
+        present_today = today_attendance.filter(status='Present').count()
+        
+        # Get pending leave requests
+        student_ids = students.values_list('id', flat=True)
+        pending_leaves = Leave.objects.filter(
+            student_id__in=student_ids,
+            status='Pending'
+        )
+        
+        # Get subjects for this class
+        subjects = Subject.objects.filter(class_name=class_name)
+        
+        # Get events for this class
+        events = Event.objects.filter(
+            Q(audience='ALL') | Q(class_name=class_name, division=division)
+        ).order_by('-date')[:10]
+        
+        return Response({
+            'teacher': UserSerializer(teacher).data,
+            'class': ClassSerializer(class_obj).data,
+            'students': UserSerializer(students, many=True).data,
+            'total_students': students.count(),
+            'present_today': present_today,
+            'pending_leaves': LeaveSerializer(pending_leaves, many=True).data,
+            'subjects': SubjectSerializer(subjects, many=True).data,
+            'events': EventSerializer(events, many=True).data
+        }, status=status.HTTP_200_OK)
+        
+    except User.DoesNotExist:
+        return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def subject_teacher_dashboard(request):
+    """Get all data for subject teacher dashboard"""
+    teacher_id = request.query_params.get('teacher_id')
+    
+    if not teacher_id:
+        return Response({'error': 'teacher_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        teacher = User.objects.get(id=teacher_id, role='teacher')
+        
+        # Get subjects taught by this teacher
+        subjects = Subject.objects.filter(class_teacher_id=teacher_id)
+        
+        # Get all classes
+        classes = Class.objects.all()
+        
+        # Get assignments created by this teacher
+        assignments = Assignment.objects.filter(teacher_id=teacher_id)
+        
+        return Response({
+            'teacher': UserSerializer(teacher).data,
+            'subjects': SubjectSerializer(subjects, many=True).data,
+            'classes': ClassSerializer(classes, many=True).data,
+            'assignments': AssignmentSerializer(assignments, many=True).data,
+            'total_assignments': assignments.count(),
+            'pending_assignments': assignments.filter(status='Pending').count()
+        }, status=status.HTTP_200_OK)
+        
+    except User.DoesNotExist:
+        return Response({'error': 'Teacher not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -45,3 +45,17 @@ build/
 
 # Angular
 .angular/
+client/dist/
+client/.angular/
+
+# Environment files (sensitive)
+.env
+.env.local
+.env.production
+
+# Database dumps
+*.sql
+*.dump
+
+# Utility scripts
+create_admin.py

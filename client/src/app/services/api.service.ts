@@ -328,7 +328,7 @@ export class ApiService {
 
   getMarksByStudent(studentId: number): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/marks/?student_id=${studentId}`,
+      `${this.baseUrl}/marks/?student=${studentId}`,
       this.getHttpOptions()
     );
   }
@@ -343,5 +343,42 @@ export class ApiService {
 
   deleteMarks(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/marks/${id}/`, this.getHttpOptions());
+  }
+
+  // ========== Assignments ==========
+  getAllAssignments(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/assignments/`, this.getHttpOptions());
+  }
+
+  getAssignmentsByClass(className: string, division?: string): Observable<any> {
+    let url = `${this.baseUrl}/assignments/?className=${className}`;
+    if (division) {
+      url += `&division=${division}`;
+    }
+    return this.http.get(url, this.getHttpOptions());
+  }
+
+  getAssignmentsByTeacher(teacherId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/assignments/?teacher=${teacherId}`, this.getHttpOptions());
+  }
+
+  createAssignment(assignmentData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/assignments/`, assignmentData, this.getHttpOptions());
+  }
+
+  updateAssignment(id: number, assignmentData: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/assignments/${id}/`, assignmentData, this.getHttpOptions());
+  }
+
+  deleteAssignment(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/assignments/${id}/`, this.getHttpOptions());
+  }
+
+  // ========== Subject Teacher Dashboard ==========
+  getSubjectTeacherDashboard(teacherId: number): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/teachers/subject_dashboard/?teacher_id=${teacherId}`,
+      this.getHttpOptions()
+    );
   }
 }

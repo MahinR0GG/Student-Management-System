@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Class, Attendance, Leave, Subject, Event
+from .models import User, Class, Attendance, Leave, Subject, Event, Mark, Assignment
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -55,3 +55,16 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ['audience', 'date']
     search_fields = ['title', 'description']
     date_hierarchy = 'date'
+
+@admin.register(Mark)
+class MarkAdmin(admin.ModelAdmin):
+    list_display = ['student', 'subject', 'exam_type', 'marks_obtained', 'total_marks', 'percentage']
+    list_filter = ['exam_type', 'class_name', 'division']
+    search_fields = ['student__name', 'subject__name']
+    
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = ['title', 'class_name', 'division', 'subject', 'teacher', 'due_date', 'status']
+    list_filter = ['status', 'class_name', 'due_date']
+    search_fields = ['title', 'description', 'teacher__name']
+    date_hierarchy = 'due_date'

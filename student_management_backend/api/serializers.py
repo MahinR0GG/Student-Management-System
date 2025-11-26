@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Class, Attendance, Leave, Subject, Event, Marks
+from .models import User, Class, Attendance, Leave, Subject, Event, Mark, Assignment
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
@@ -18,9 +18,6 @@ class LoginSerializer(serializers.Serializer):
     userType = serializers.CharField()
 
 class ClassSerializer(serializers.ModelSerializer):
-    class_teacher_name = serializers.CharField(source='class_teacher.name', read_only=True, allow_null=True)
-    class_teacher_subject = serializers.CharField(source='class_teacher.subject', read_only=True, allow_null=True)
-    
     class Meta:
         model = Class
         fields = '__all__'
@@ -32,18 +29,18 @@ class AttendanceSerializer(serializers.ModelSerializer):
         model = Attendance
         fields = '__all__'
 
+
 class LeaveSerializer(serializers.ModelSerializer):
     # Make student a proper writable FK field
-    student = serializers.PrimaryKeyRelatedField(queryset=User.objects.filter(role='student'))
-    id = serializers.IntegerField(read_only=True)
-    student_name = serializers.CharField(source='student.name', read_only=True)
+    student = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.filter(role='student')
+    )
 
     class Meta:
         model = Leave
         fields = [
             'id',
             'student',
-            'student_name',
             'reason',
             'start_date',
             'end_date',
@@ -52,14 +49,7 @@ class LeaveSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at', 'student_name']
-# class LeaveSerializer(serializers.ModelSerializer):
-#     student_name = serializers.CharField(source='student.name', read_only=True)
-    
-#     class Meta:
-#         model = Leave
-#         fields = '__all__'
-#         read_only_fields = ['id', 'student', 'created_at', 'updated_at', 'student_name']
+        read_only_fields = ['created_at', 'updated_at']
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,27 +61,50 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = '__all__'
 
-class MarksSerializer(serializers.ModelSerializer):
+class MarkSerializer(serializers.ModelSerializer):
     student_name = serializers.CharField(source='student.name', read_only=True)
-    teacher_name = serializers.CharField(source='teacher.name', read_only=True)
+    subject_name = serializers.CharField(source='subject.name', read_only=True)
     
     class Meta:
-        model = Marks
+        model = Mark
         fields = [
             'id',
             'student',
             'student_name',
-            'teacher',
-            'teacher_name',
             'subject',
-            'class_name',
-            'division',
+            'subject_name',
             'exam_type',
             'marks_obtained',
             'total_marks',
             'percentage',
             'remarks',
+            'class_name',
+            'division',
+            'created_by',
             'created_at',
-            'updated_at',
+            'updated_at'
         ]
-        read_only_fields = ['id', 'percentage', 'created_at', 'updated_at', 'student_name', 'teacher_name']
+        read_only_fields = ['id', 'percentage', 'created_at', 'updated_at']
+
+class AssignmentSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(source='teacher.name', read_only=True)
+    subject_name = serializers.CharField(source='subject.name', read_only=True)
+    
+    class Meta:
+        model = Assignment
+        fields = [
+            'id',
+            'title',
+            'description',
+            'due_date',
+            'class_name',
+            'division',
+            'subject',
+            'subject_name',
+            'teacher',
+            'teacher_name',
+            'status',
+            'created_at',
+            'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
