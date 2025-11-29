@@ -63,7 +63,9 @@ class EventSerializer(serializers.ModelSerializer):
 
 class MarkSerializer(serializers.ModelSerializer):
     student_name = serializers.CharField(source='student.name', read_only=True)
-    subject_name = serializers.CharField(source='subject.name', read_only=True)
+    # subject is now a CharField, so subject_name is just the subject field itself
+    subject_name = serializers.CharField(source='subject', read_only=True)
+    teacher_name = serializers.CharField(source='teacher.name', read_only=True)
     
     class Meta:
         model = Mark
@@ -80,11 +82,14 @@ class MarkSerializer(serializers.ModelSerializer):
             'remarks',
             'class_name',
             'division',
-            'created_by',
+            'teacher',
+            'teacher_name',
             'created_at',
             'updated_at'
         ]
         read_only_fields = ['id', 'percentage', 'created_at', 'updated_at']
+        # Disable unique_together validation to allow custom create method to handle it
+        validators = []
 
 class AssignmentSerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(source='teacher.name', read_only=True)

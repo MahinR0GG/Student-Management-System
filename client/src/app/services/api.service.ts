@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class ApiService {
   private baseUrl = 'http://localhost:8000/api'; // Django backend URL
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // HTTP Options
   private getHttpOptions() {

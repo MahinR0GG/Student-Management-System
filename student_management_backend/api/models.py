@@ -221,36 +221,32 @@ class Mark(models.Model):
         related_name='marks',
         limit_choices_to={'role': 'student'}
     )
-    subject = models.ForeignKey(
-        Subject,
-        on_delete=models.CASCADE,
-        related_name='marks'
-    )
+    # Changed from ForeignKey to CharField to match existing database
+    subject = models.CharField(max_length=100)
     exam_type = models.CharField(max_length=50, choices=EXAM_TYPE_CHOICES)
-    marks_obtained = models.IntegerField(
+    marks_obtained = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    total_marks = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)],
-        default=100
-    )
-    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    remarks = models.CharField(max_length=255, null=True, blank=True)
+    total_marks = models.FloatField(default=100)
+    percentage = models.FloatField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
     class_name = models.CharField(max_length=10)
     division = models.CharField(max_length=1, null=True, blank=True)
-    created_by = models.ForeignKey(
+    # Teacher who created the marks (matches database column teacher_id)
+    teacher = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='marks_created',
-        limit_choices_to={'role': 'teacher'}
+        on_delete=models.CASCADE,
+        related_name='marks_given',
+        limit_choices_to={'role': 'teacher'},
+        db_column='teacher_id'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = 'marks'
-        unique_together = [['student', 'subject', 'exam_type']]
+        # Updated to match the original migration
+        unique_together = [['student', 'subject', 'exam_type', 'teacher']]
     
     def save(self, *args, **kwargs):
         # Auto-calculate percentage
@@ -259,7 +255,7 @@ class Mark(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"{self.student.name} - {self.subject.name} - {self.exam_type}"
+        return f"{self.student.name} - {self.subject} - {self.exam_type}"
 
 # Assignment Model
 class Assignment(models.Model):

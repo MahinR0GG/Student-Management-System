@@ -116,6 +116,7 @@ export class SubjectTeacherDashboardComponent implements OnInit {
      MARKS ENTRY
   ======================================== */
   onClassSelectionChange() {
+    console.log('Class selection changed:', this.selectedClassForMarks);
     if (this.selectedClassForMarks) {
       this.loadStudentsForMarks();
     }
@@ -127,6 +128,7 @@ export class SubjectTeacherDashboardComponent implements OnInit {
     this.loadingStudents = true;
     const classNumber = this.selectedClassForMarks.class_number;
     const division = this.selectedClassForMarks.division;
+    console.log(`Loading students for class ${classNumber}${division}`);
 
     this.api.getUsersByClass(classNumber, division).subscribe({
       next: (response: any) => {
@@ -155,48 +157,75 @@ export class SubjectTeacherDashboardComponent implements OnInit {
     this.api.getAllSubjects().subscribe({
       next: (response: any) => {
         const subjects = Array.isArray(response) ? response : (response.results || []);
-        const teacherSubjectObj = subjects.find((s: any) =>
+        let teacherSubjectObj = subjects.find((s: any) =>
           s.name.toLowerCase() === this.teacherSubject.toLowerCase() &&
           s.class_name === this.selectedClassForMarks.class_number.toString()
         );
 
+        // If subject doesn't exist for this class, create it automatically
         if (!teacherSubjectObj) {
-          alert(`Subject not found for this class`);
-          return;
-        }
+          console.log(`Subject "${this.teacherSubject}" not found for class ${this.selectedClassForMarks.class_number}, creating it...`);
 
-        const marksPromises = this.studentsForMarks.map(student => {
-          const markData = {
-            student: student.id,
-            subject: teacherSubjectObj.id,
-            exam_type: this.selectedExamType,
-            marks_obtained: student.marksObtained || 0,
-            total_marks: this.marksEntry.totalMarks,
-            remarks: student.remarks || '',
+          const newSubjectData = {
+            name: this.teacherSubject,
             class_name: this.selectedClassForMarks.class_number.toString(),
-            division: this.selectedClassForMarks.division,
-            created_by: this.teacherId
+            class_teacher: this.teacherId
           };
-          return this.api.createMarks(markData).toPromise();
-        });
 
-        Promise.all(marksPromises)
-          .then(() => {
-            alert('✅ Marks saved successfully!');
-            this.studentsForMarks.forEach(s => {
-              s.marksObtained = 0;
-              s.remarks = '';
-            });
-          })
-          .catch((err) => {
-            console.error('Error saving marks:', err);
-            alert('Error saving marks');
+          this.api.createSubject(newSubjectData).subscribe({
+            next: (createdSubject: any) => {
+              console.log('Subject created successfully:', createdSubject);
+              // Now proceed with saving marks using the newly created subject
+              this.saveMarksWithSubject(createdSubject);
+            },
+            error: (err) => {
+              console.error('Error creating subject:', err);
+              alert('Error creating subject. Please try again.');
+            }
           });
+        } else {
+          // Subject exists, proceed with saving marks
+          this.saveMarksWithSubject(teacherSubjectObj);
+        }
       },
       error: (err) => {
         console.error('Error loading subjects:', err);
+        alert('Error loading subjects. Please try again.');
       }
     });
+  }
+
+  // Helper method to save marks once we have a valid subject
+  private saveMarksWithSubject(subjectObj: any) {
+    const marksPromises = this.studentsForMarks.map(student => {
+      const markData = {
+        student: student.id,
+        subject: subjectObj.name,  // Send subject NAME as string, not ID
+        exam_type: this.selectedExamType,
+        marks_obtained: student.marksObtained || 0,
+        total_marks: this.marksEntry.totalMarks,
+        remarks: student.remarks || '',
+        class_name: this.selectedClassForMarks.class_number.toString(),
+        division: this.selectedClassForMarks.division,
+        teacher: this.teacherId  // Changed from created_by to teacher
+      };
+      return this.api.createMarks(markData).toPromise();
+    });
+
+    Promise.all(marksPromises)
+      .then(() => {
+        alert('✅ Marks saved successfully!');
+        this.studentsForMarks.forEach(s => {
+          s.marksObtained = 0;
+          s.remarks = '';
+        });
+      })
+      .catch((err) => {
+        console.error('Error saving marks:', err);
+        console.error('Error details:', err.error);
+        console.error('Error message:', err.message);
+        alert('Error saving marks: ' + (err.error?.detail || err.error?.non_field_errors?.[0] || err.message || 'Unknown error'));
+      });
   }
 
   /* ========================================
@@ -205,7 +234,14 @@ export class SubjectTeacherDashboardComponent implements OnInit {
   loadAssignments() {
     this.api.getAssignmentsByTeacher(this.teacherId).subscribe({
       next: (response: any) => {
-        this.assignments = response || [];
+        // Handle paginated response
+        if (Array.isArray(response)) {
+          this.assignments = response;
+        } else if (response && response.results) {
+          this.assignments = response.results;
+        } else {
+          this.assignments = [];
+        }
         this.totalAssignments = this.assignments.length;
         this.pendingAssignments = this.assignments.filter((a: any) => a.status === 'Pending').length;
       },
@@ -229,50 +265,75 @@ export class SubjectTeacherDashboardComponent implements OnInit {
     this.api.getAllSubjects().subscribe({
       next: (response: any) => {
         const subjects = Array.isArray(response) ? response : (response.results || []);
-        const teacherSubjectObj = subjects.find((s: any) =>
+        let teacherSubjectObj = subjects.find((s: any) =>
           s.name.toLowerCase() === this.teacherSubject.toLowerCase() &&
           s.class_name === this.newAssignment.className
         );
 
+        // If subject doesn't exist for this class, create it automatically
         if (!teacherSubjectObj) {
-          alert(`Subject not found for the selected class`);
-          return;
+          console.log(`Subject "${this.teacherSubject}" not found for class ${this.newAssignment.className}, creating it...`);
+
+          const newSubjectData = {
+            name: this.teacherSubject,
+            class_name: this.newAssignment.className,
+            class_teacher: this.teacherId
+          };
+
+          this.api.createSubject(newSubjectData).subscribe({
+            next: (createdSubject: any) => {
+              console.log('Subject created successfully:', createdSubject);
+              // Now proceed with creating assignment using the newly created subject
+              this.createAssignmentWithSubject(createdSubject);
+            },
+            error: (err) => {
+              console.error('Error creating subject:', err);
+              alert('Error creating subject. Please try again.');
+            }
+          });
+        } else {
+          // Subject exists, proceed with creating assignment
+          this.createAssignmentWithSubject(teacherSubjectObj);
         }
-
-        const assignmentData = {
-          title: this.newAssignment.title,
-          description: this.newAssignment.description,
-          due_date: this.newAssignment.dueDate,
-          class_name: this.newAssignment.className,
-          division: this.newAssignment.division,
-          subject: teacherSubjectObj.id,
-          teacher: this.teacherId,
-          status: 'Pending'
-        };
-
-        this.api.createAssignment(assignmentData).subscribe({
-          next: (response: any) => {
-            alert('✅ Assignment created successfully!');
-            this.assignments.push(response);
-            this.totalAssignments++;
-            this.pendingAssignments++;
-            this.newAssignment = {
-              title: '',
-              description: '',
-              dueDate: '',
-              className: '',
-              division: '',
-              classSelection: ''
-            };
-          },
-          error: (err) => {
-            console.error('Error creating assignment:', err);
-            alert('Error creating assignment');
-          }
-        });
       },
       error: (err) => {
         console.error('Error loading subjects:', err);
+        alert('Error loading subjects. Please try again.');
+      }
+    });
+  }
+
+  // Helper method to create assignment once we have a valid subject
+  private createAssignmentWithSubject(subjectObj: any) {
+    const assignmentData = {
+      title: this.newAssignment.title,
+      description: this.newAssignment.description,
+      due_date: this.newAssignment.dueDate,
+      class_name: this.newAssignment.className,
+      division: this.newAssignment.division,
+      subject: subjectObj.id,
+      teacher: this.teacherId,
+      status: 'Pending'
+    };
+
+    this.api.createAssignment(assignmentData).subscribe({
+      next: (response: any) => {
+        alert('✅ Assignment created successfully!');
+        this.assignments.push(response);
+        this.totalAssignments++;
+        this.pendingAssignments++;
+        this.newAssignment = {
+          title: '',
+          description: '',
+          dueDate: '',
+          className: '',
+          division: '',
+          classSelection: ''
+        };
+      },
+      error: (err) => {
+        console.error('Error creating assignment:', err);
+        alert('Error creating assignment: ' + (err.error?.detail || err.message || 'Unknown error'));
       }
     });
   }

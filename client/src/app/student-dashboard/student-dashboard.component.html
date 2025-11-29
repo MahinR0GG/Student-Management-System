@@ -78,9 +78,38 @@
         Grades
         <span *ngIf="selectedSubject !== 'All'"> - {{ selectedSubject }}</span>
       </h3>
-      <div class="chart-container">
+      <div class="chart-container" style="height: 200px; margin-bottom: 20px;">
         <canvas id="gradesBarChart"></canvas>
       </div>
+      
+      <!-- Detailed Marks Table -->
+      <div class="table-container" *ngIf="displayedMarks.length > 0">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Exam</th>
+              <th>Marks</th>
+              <th>Total</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mark of displayedMarks">
+              <td>{{ mark.subject }}</td>
+              <td>{{ mark.exam_type }}</td>
+              <td>{{ mark.marks_obtained }}</td>
+              <td>{{ mark.total_marks }}</td>
+              <td>
+                <span class="badge" [ngClass]="{'success': mark.score >= 75, 'warning': mark.score >= 50 && mark.score < 75, 'danger': mark.score < 50}">
+                  {{ mark.score | number:'1.0-1' }}%
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div *ngIf="displayedMarks.length === 0" class="empty-state">
         <p>No marks found for this subject.</p>
       </div>

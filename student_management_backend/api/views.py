@@ -268,6 +268,38 @@ class MarkViewSet(viewsets.ModelViewSet):
     serializer_class = MarkSerializer
     permission_classes = [AllowAny]
     
+    def create(self, request, *args, **kwargs):
+        """Override create to use update_or_create for handling duplicate marks"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Extract the unique fields
+        student_id = serializer.validated_data.get('student').id
+        subject = serializer.validated_data.get('subject')
+        exam_type = serializer.validated_data.get('exam_type')
+        teacher_id = serializer.validated_data.get('teacher').id
+        
+        # Use update_or_create to handle duplicates
+        mark, created = Mark.objects.update_or_create(
+            student_id=student_id,
+            subject=subject,
+            exam_type=exam_type,
+            teacher_id=teacher_id,
+            defaults={
+                'marks_obtained': serializer.validated_data.get('marks_obtained'),
+                'total_marks': serializer.validated_data.get('total_marks'),
+                'remarks': serializer.validated_data.get('remarks', ''),
+                'class_name': serializer.validated_data.get('class_name'),
+                'division': serializer.validated_data.get('division'),
+            }
+        )
+        
+        # Return the created/updated mark
+        output_serializer = self.get_serializer(mark)
+        headers = self.get_success_headers(output_serializer.data)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(output_serializer.data, status=status_code, headers=headers)
+    
     def get_queryset(self):
         queryset = Mark.objects.all()
         student_id = self.request.query_params.get('student')
