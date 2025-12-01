@@ -15,6 +15,7 @@ urlpatterns = [
     # Auth endpoints
     path('auth/login', views.login_view, name='login'),
     path('auth/register', views.register_view, name='register'),
+    path('admin/stats', views.admin_dashboard_stats, name='admin-stats'),
     
     # Router URLs
     path('', include(router.urls)),

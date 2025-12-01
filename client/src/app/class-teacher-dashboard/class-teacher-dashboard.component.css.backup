@@ -15,106 +15,25 @@
   /* 2. Updated: Add padding to move content down/in */
   padding: 2rem;
 
-  /* Re-add base font styles */
-  color: #4a4762;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
+  /* This is the style for the active link */
+  .teacher-sidebar .sidebar-nav li a.active {
+    background: #8a63d2;
+    color: white;
+    box-shadow: 0 4px 10px rgba(138, 99, 210, 0.4);
+  }
 
-.teacher-dashboard-layout {
-  display: flex;
-  gap: 2rem;
-  /* Font color and family are now on the :host element */
-}
+  .teacher-content-area {
+    flex: 1;
+    /* Takes up all remaining space */
+    min-width: 0;
+    /* Fix for flexbox overflow */
+  }
 
-.teacher-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  background: #ffffff;
-  /* Updated: Using a softer shadow for the white bg */
-  box-shadow: 0 4px 20px rgba(138, 99, 210, 0.08);
-  border: 1px solid #f0eefc;
-  /* Added subtle border */
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  /* Sidebar is only as tall as its content */
-}
-
-.teacher-sidebar .sidebar-header {
-  padding: 1.5rem;
-  text-align: center;
-  border-bottom: 1px solid #f0eefc;
-}
-
-.teacher-sidebar .sidebar-header h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #8a63d2;
-}
-
-.teacher-sidebar .sidebar-nav {
-  list-style: none;
-  padding: 1rem;
-  margin: 0;
-  flex: 1;
-}
-
-.teacher-sidebar .sidebar-nav li a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0.9rem 1.2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #4a4762;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.teacher-sidebar .sidebar-nav li a:hover {
-  background: #f8f6ff;
-  /* Light purple hover */
-  color: #8a63d2;
-}
-
-/* This is the style for the active link */
-.teacher-sidebar .sidebar-nav li a.active {
-  background: #8a63d2;
-  color: white;
-  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.4);
-}
-
-.teacher-content-area {
-  flex: 1;
-  /* Takes up all remaining space */
-  min-width: 0;
-  /* Fix for flexbox overflow */
-}
-
-/* =========================================
+  /* =========================================
    Your Existing Panel Styles (MODIFIED)
 ========================================= */
 
-/* --- Header (for Overview) --- */
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  animation: fadeIn 0.4s ease-in;
-}
-
-.dashboard-header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #8a63d2;
-  /* Removed text-shadow, looks cleaner on white */
-}
-
-.dashboard-header p {
-  font-size: 1rem;
+  /* --- Header (for Overview) --- */
   color: #5a5a7d;
 }
 

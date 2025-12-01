@@ -52,6 +52,10 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/register`, userData, this.getHttpOptions());
   }
 
+  getAdminStats(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/stats`, this.getHttpOptions());
+  }
+
   // ========== Users ==========
   getAllUsers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/users/`, this.getHttpOptions());

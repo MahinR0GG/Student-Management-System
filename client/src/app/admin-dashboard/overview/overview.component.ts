@@ -1,28 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../services/api.service';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-overview',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.css']
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
 
-  // Mock stats (later replace with API)
   stats = {
-    students: 420,
-    teachers: 28,
-    classes: 12,
-    attendanceToday: '92%',
-    leavesPending: 6,
-    eventsThisMonth: 3
+    students: 0,
+    teachers: 0,
+    classes: 0,
+    attendanceToday: '0%',
+    leavesPending: 0,
+    eventsThisMonth: 0
   };
 
-  recentActivity = [
-    { text: 'Student A applied for leave', time: '2 hrs ago' },
-    { text: 'Teacher Priya marked attendance', time: '4 hrs ago' },
-    { text: 'New student added to Class 10A', time: 'Yesterday' },
-    { text: 'Exam schedule updated', time: 'Yesterday' }
-  ];
+  recentActivity: any[] = [];
 
   quickActions = [
     { text: 'Manage Users', link: '/admin-dashboard/manage-users' },
@@ -30,5 +29,27 @@ export class OverviewComponent {
     { text: 'Add Event', link: '/admin-dashboard/events' },
     { text: 'View Leave Requests', link: '/admin-dashboard/leave-requests' }
   ];
+
+  constructor(private api: ApiService) { }
+
+  ngOnInit() {
+    this.fetchStats();
+  }
+
+  fetchStats() {
+    this.api.getAdminStats().subscribe({
+      next: (res: any) => {
+        if (res.stats) {
+          this.stats = { ...this.stats, ...res.stats };
+        }
+        if (res.recentActivity) {
+          this.recentActivity = res.recentActivity;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching admin stats:', err);
+      }
+    });
+  }
 
 }

@@ -24,20 +24,21 @@ export class ManageUsersComponent implements OnInit {
   // High school only
   classes = [8, 9, 10];
   divisions = ['A', 'B', 'C'];
-  
+
   subjects = ['English', 'Hindi', 'Maths', 'Science', 'Physics', 'Chemistry', 'Biology'];
 
   user = {
     name: "",
     email: "",
     password: "",
+    phone: "",
     role: "student",
     classNumber: null as number | null,
     division: "",
     subject: ""
   };
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
     this.fetchUsers();
@@ -46,11 +47,11 @@ export class ManageUsersComponent implements OnInit {
   fetchUsers() {
     this.isLoading = true;
     this.errorMessage = "";
-    
+
     this.api.getAllUsers().subscribe({
       next: (res: any) => {
         console.log('API Response:', res);
-        
+
         // Handle both response formats
         if (res.users) {
           this.users = res.users;
@@ -59,7 +60,7 @@ export class ManageUsersComponent implements OnInit {
         } else {
           this.users = [];
         }
-        
+
         this.isLoading = false;
         console.log('Users loaded:', this.users);
       },
@@ -84,6 +85,7 @@ export class ManageUsersComponent implements OnInit {
       name: "",
       email: "",
       password: "",
+      phone: "",
       role: "student",
       classNumber: null,
       division: "",
@@ -96,7 +98,7 @@ export class ManageUsersComponent implements OnInit {
   onRoleChange(event: any) {
     this.selectedRole = event.target.value;
     this.user.role = this.selectedRole;
-    
+
     // Reset role-specific fields
     if (this.selectedRole !== 'student') {
       this.user.classNumber = null;
@@ -128,6 +130,7 @@ export class ManageUsersComponent implements OnInit {
       name: this.user.name,
       email: this.user.email,
       password: this.user.password,
+      phone: this.user.phone,
       role: this.selectedRole
     };
 
@@ -187,10 +190,10 @@ export class ManageUsersComponent implements OnInit {
 
     return this.users.filter(u => {
       const matchesRole = this.roleFilter === "all" || u.role === this.roleFilter;
-      const matchesSearch = !this.searchTerm || 
+      const matchesSearch = !this.searchTerm ||
         u.name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         u.email?.toLowerCase().includes(this.searchTerm.toLowerCase());
-      
+
       return matchesRole && matchesSearch;
     });
   }

@@ -59,13 +59,62 @@ def register_view(request):
             role=serializer.validated_data['role'],
             className=serializer.validated_data.get('className'),
             division=serializer.validated_data.get('division'),
-            subject=serializer.validated_data.get('subject')
+            subject=serializer.validated_data.get('subject'),
+            phone=serializer.validated_data.get('phone')
         )
         return Response({
             'message': 'User created successfully',
             'user': UserSerializer(user).data
         }, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def admin_dashboard_stats(request):
+    """Get stats for admin dashboard"""
+    try:
+        student_count = User.objects.filter(role='student').count()
+        teacher_count = User.objects.filter(role='teacher').count()
+        class_count = Class.objects.count()
+        
+        # Calculate attendance percentage for today
+        from datetime import date
+        today = date.today()
+        total_attendance = Attendance.objects.filter(date=today).count()
+        present_count = Attendance.objects.filter(date=today, status='Present').count()
+        
+        attendance_percentage = 0
+        if total_attendance > 0:
+            attendance_percentage = (present_count / total_attendance) * 100
+            
+        # Recent activity
+        recent_leaves = Leave.objects.all().order_by('-created_at')[:3]
+        recent_events = Event.objects.all().order_by('-created_at')[:2]
+        
+        activity = []
+        for leave in recent_leaves:
+            activity.append({
+                'text': f"Leave request from {leave.student.name}",
+                'time': leave.created_at.strftime("%d %b, %H:%M")
+            })
+            
+        for event in recent_events:
+            activity.append({
+                'text': f"New event: {event.title}",
+                'time': event.created_at.strftime("%d %b, %H:%M")
+            })
+            
+        return Response({
+            'stats': {
+                'students': student_count,
+                'teachers': teacher_count,
+                'classes': class_count,
+                'attendanceToday': f"{int(attendance_percentage)}%"
+            },
+            'recentActivity': activity
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # User ViewSet
 class UserViewSet(viewsets.ModelViewSet):
@@ -108,7 +157,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 role=serializer.validated_data['role'],
                 className=serializer.validated_data.get('className'),
                 division=serializer.validated_data.get('division'),
-                subject=serializer.validated_data.get('subject')
+                subject=serializer.validated_data.get('subject'),
+                phone=serializer.validated_data.get('phone')
             )
             return Response({
                 'message': 'User created successfully',
