@@ -1,0 +1,365 @@
+<!-- ✅ Check if Teacher is a Class Teacher -->
+<div *ngIf="!isClassTeacher" class="not-class-teacher">
+  <div class="alert-message">
+    <h2>⚠️ Not a Class Teacher</h2>
+    <p>You have not been assigned as a class teacher. Only teachers with class assignments can access this dashboard.
+    </p>
+    <p>Please contact the admin to assign you as a class teacher for a class.</p>
+  </div>
+</div>
+
+<!-- ✅ Show Dashboard Only if Teacher is a Class Teacher -->
+<div class="teacher-dashboard-layout" *ngIf="isClassTeacher">
+
+  <!-- ✅ Top Right Logout -->
+  <div class="top-nav">
+    <button class="logout-btn" (click)="logout()">
+      <span class="material-icons">logout</span>
+      Logout
+    </button>
+  </div>
+
+  <!-- ✅ Sidebar -->
+  <div class="teacher-sidebar">
+    <div class="sidebar-header">
+      <h3>Class Teacher</h3>
+      <p class="sidebar-subtitle">Welcome, {{ teacherName }}</p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a (click)="setView('overview')" [class.active]="currentView === 'overview'">📊 Dashboard Overview</a></li>
+      <li><a (click)="setView('attendance')" [class.active]="currentView === 'attendance'">📋 Take Attendance</a></li>
+      <li><a (click)="setView('roster')" [class.active]="currentView === 'roster'">🧑‍🎓 Student Roster</a></li>
+      <li><a (click)="setView('leave')" [class.active]="currentView === 'leave'">✉️ Leave Requests</a></li>
+      <li><a (click)="setView('events')" [class.active]="currentView === 'events'">🎉 Manage Events</a></li>
+      <li><a (click)="setView('exams')" [class.active]="currentView === 'exams'">📝 Exam Marks</a></li>
+      <li><a (click)="setView('academic')" [class.active]="currentView === 'academic'">📚 Academic Overview</a></li>
+      <li><a (click)="setView('profile')" [class.active]="currentView === 'profile'">👤 My Profile</a></li>
+    </ul>
+  </div>
+
+  <!-- ✅ Content Area -->
+  <div class="teacher-content-area">
+
+    <!-- 👉 Overview -->
+    <div *ngIf="currentView === 'overview'">
+      <div class="dashboard-header">
+        <h1>Class Teacher Dashboard</h1>
+        <p>Welcome, {{ teacherName }} | Class: {{ className }}</p>
+      </div>
+
+      <div class="kpi-section">
+        <div class="kpi-card">
+          <h3>Total Students</h3>
+          <p>{{ totalStudents }}</p>
+        </div>
+        <div class="kpi-card">
+          <h3>Present Today</h3>
+          <p>{{ currentPresentCount }}</p>
+          <small *ngIf="attendanceDateForDisplay" style="font-size: 0.8em; color: #888;">Last saved: {{
+            attendanceDateForDisplay }}</small>
+        </div>
+        <div class="kpi-card">
+          <h3>Absent Today</h3>
+          <p>{{ currentAbsentCount }}</p>
+          <small *ngIf="attendanceDateForDisplay" style="font-size: 0.8em; color: #888;">Last saved: {{
+            attendanceDateForDisplay }}</small>
+        </div>
+        <div class="kpi-card">
+          <h3>Pending Leaves</h3>
+          <p>{{ pendingLeaves }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="attendanceDateForDisplay" class="attendance-note">
+        <p><strong>Last Attendance:</strong> {{ attendanceDateForDisplay }}</p>
+      </div>
+    </div>
+
+    <!-- 👉 Attendance -->
+    <div *ngIf="currentView === 'attendance'" class="attendance-panel">
+      <h2>Attendance Management</h2>
+
+      <div class="attendance-controls">
+        <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" />
+        <button (click)="markAllPresent()" class="mark-btn-success" [disabled]="isAttendanceLocked">Mark All
+          Present</button>
+        <button (click)="markAllAbsent()" class="mark-btn-danger" [disabled]="isAttendanceLocked">Mark All
+          Absent</button>
+        <button (click)="saveAttendance()" class="save-btn" [disabled]="isAttendanceLocked">Save Attendance</button>
+      </div>
+
+      <!-- Warning Message when Locked -->
+      <div *ngIf="isAttendanceLocked" class="locked-warning"
+        style="background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #ffeeba;">
+        <strong>⚠️ Attendance Locked:</strong> Attendance for this date has already been submitted. Please contact the
+        Admin to make changes.
+      </div>
+
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredStudents">
+            <td>{{ s.id }}</td>
+            <td>{{ s.name }}</td>
+            <td>
+              <select [(ngModel)]="s.present" class="status-select" [disabled]="isAttendanceLocked">
+                <option [ngValue]="true">Present</option>
+                <option [ngValue]="false">Absent</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 👉 Student Roster -->
+    <div *ngIf="currentView === 'roster'" class="student-roster">
+      <h2>Student List & Management</h2>
+
+      <div class="roster-search">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="🔍 Search student..." />
+      </div>
+
+      <table class="roster-table">
+        <thead>
+          <tr>
+            <th (click)="sortBy('id')" class="sortable">ID</th>
+            <th (click)="sortBy('name')" class="sortable">Name</th>
+            <th (click)="sortBy('email')" class="sortable">Email</th>
+            <th>Class</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredStudents">
+            <td>{{ s.id }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.email }}</td>
+            <td>{{ s.className }}{{ s.division }}</td>
+            <td><button class="approve-btn" (click)="startEdit(s)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="editingStudent" class="edit-student-modal">
+        <div class="modal-content">
+          <h2>Edit Student Details</h2>
+
+          <div class="form-group">
+            <label>Student ID:</label>
+            <input [(ngModel)]="editingStudent.id" disabled class="input-disabled">
+          </div>
+
+          <div class="form-group">
+            <label>Full Name:</label>
+            <input [(ngModel)]="editingStudent.name" class="input-field" placeholder="Enter student name">
+          </div>
+
+          <div class="form-group">
+            <label>Email:</label>
+            <input [(ngModel)]="editingStudent.email" disabled class="input-disabled">
+          </div>
+
+          <div class="form-group">
+            <label>Class:</label>
+            <input [(ngModel)]="editingStudent.className" class="input-field" placeholder="e.g., 9">
+          </div>
+
+          <div class="form-group">
+            <label>Division:</label>
+            <input [(ngModel)]="editingStudent.division" class="input-field" placeholder="e.g., A">
+          </div>
+
+          <div class="form-actions">
+            <button class="approve-btn" (click)="saveStudentEdit()">Save Changes</button>
+            <button class="reject-btn" (click)="cancelEdit()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 👉 Leave Requests -->
+    <div *ngIf="currentView === 'leave'">
+      <h2>Leave Requests</h2>
+
+      <table class="leave-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let leave of leaveRequests">
+            <td>{{ leave.student }}</td>
+            <td>{{ leave.reason }}</td>
+            <td>{{ leave.status }}</td>
+            <td>
+              <button class="approve-btn" (click)="approveLeave(leave)"
+                [disabled]="leave.status !== 'Pending'">Approve</button>
+              <button class="reject-btn" (click)="rejectLeave(leave)"
+                [disabled]="leave.status !== 'Pending'">Reject</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 👉 Events -->
+    <div *ngIf="currentView === 'events'">
+      <div class="event-management-panel">
+        <h2>Upcoming Events</h2>
+
+        <div class="attendance-controls">
+          <input placeholder="Event Title" [(ngModel)]="newEvent.title" />
+          <input type="date" [(ngModel)]="newEvent.date" />
+          <input placeholder="Description" [(ngModel)]="newEvent.description" />
+          <button (click)="addEvent()">Add Event</button>
+        </div>
+
+        <table class="leave-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of events; let i = index">
+              <td>{{ e.title }}</td>
+              <td>{{ e.date }}</td>
+              <td>{{ e.description }}</td>
+              <td><button class="reject-btn" (click)="deleteEvent(i)">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 👉 Exams/Marks -->
+    <div *ngIf="currentView === 'exams'">
+      <div class="exam-overview-panel">
+        <h2>Student Marks - Subject Teacher Updates</h2>
+
+        <div class="exam-filter">
+          <label>Select Subject:</label>
+          <select [(ngModel)]="selectedSubjectView">
+            <option *ngFor="let subj of subjectList">{{ subj }}</option>
+          </select>
+
+          <label>Select Exam:</label>
+          <select [(ngModel)]="selectedExamView">
+            <option *ngFor="let exam of examTypes">{{ exam }}</option>
+          </select>
+        </div>
+
+        <div *ngIf="marksData.length === 0" class="no-data-message">
+          <p>No marks uploaded by subject teachers yet.</p>
+        </div>
+
+        <table class="marks-table" *ngIf="marksData.length > 0">
+          <thead>
+            <tr>
+              <th>Roll No</th>
+              <th>Student Name</th>
+              <th>Subject</th>
+              <th>Exam Type</th>
+              <th>Marks</th>
+              <th>Percentage</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mark of marksData">
+              <td>{{ mark.student }}</td>
+              <td>{{ mark.student_name }}</td>
+              <td>{{ mark.subject }}</td>
+              <td>{{ mark.exam_type }}</td>
+              <td>{{ mark.marks_obtained }}/{{ mark.total_marks }}</td>
+              <td>{{ mark.percentage | number: '1.0-2' }}%</td>
+              <td>{{ mark.remarks || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 👉 Academic -->
+    <div *ngIf="currentView === 'academic'">
+      <h2>Academic Overview</h2>
+
+      <div class="filter-box">
+        <label>Filter:</label>
+        <select [(ngModel)]="subjectFilter" class="styled-select">
+          <option value="All">All</option>
+          <option *ngFor="let subj of subjectList">{{ subj }}</option>
+        </select>
+      </div>
+
+      <table class="exam-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Average Marks</th>
+            <th>Pending Assignments</th>
+            <th>Latest Resource</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredAcademicOverview">
+            <td>{{ s.name }}</td>
+            <td>{{ s.averageMarks }}%</td>
+            <td>{{ s.pendingAssignments }}</td>
+            <td>{{ s.latestResource }}</td>
+            <td>{{ s.lastUpdated }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 👉 Profile -->
+    <div *ngIf="currentView === 'profile'" class="profile-panel">
+      <div class="profile-header">
+        <span class="material-icons profile-icon">person</span>
+        <h2>My Profile</h2>
+      </div>
+
+      <div class="profile-row"><strong>Name:</strong> {{ teacherProfile.name }}</div>
+      <div class="profile-row"><strong>Email:</strong> {{ teacherProfile.email }}</div>
+      <div class="profile-row"><strong>Phone:</strong> {{ teacherProfile.phone }}</div>
+      <div class="profile-row"><strong>Role:</strong> {{ teacherProfile.role }}</div>
+      <div class="profile-row" *ngIf="teacherProfile.classInCharge">
+        <strong>Class In-Charge:</strong> {{ teacherProfile.classInCharge }}
+      </div>
+      <div class="profile-row"><strong>Subjects:</strong> {{ teacherProfile.subjects.join(', ') }}</div>
+
+      <hr class="profile-divider">
+
+      <h3>Leave Summary</h3>
+      <div class="profile-stats">
+        <div class="profile-stat-box">
+          <small>Total</small><strong>{{ teacherProfile.totalLeaves }}</strong>
+        </div>
+        <div class="profile-stat-box">
+          <small>Used</small><strong>{{ teacherProfile.usedLeaves }}</strong>
+        </div>
+        <div class="profile-stat-box">
+          <small>Remaining</small><strong>{{ teacherProfile.totalLeaves - teacherProfile.usedLeaves }}</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

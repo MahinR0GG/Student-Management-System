@@ -1,0 +1,929 @@
+/* =========================================
+   NEW: Sidebar Layout Styles
+========================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  /* Ensure it fills viewport height */
+  box-sizing: border-box;
+
+  /* 1. Updated: Set background to white */
+  background: #ffffff;
+
+  /* 2. Updated: Add padding to move content down/in */
+  padding: 2rem;
+
+  /* This is the style for the active link */
+  .teacher-sidebar .sidebar-nav li a.active {
+    background: #8a63d2;
+    color: white;
+    box-shadow: 0 4px 10px rgba(138, 99, 210, 0.4);
+  }
+
+  .teacher-content-area {
+    flex: 1;
+    /* Takes up all remaining space */
+    min-width: 0;
+    /* Fix for flexbox overflow */
+  }
+
+  /* =========================================
+   Your Existing Panel Styles (MODIFIED)
+========================================= */
+
+  /* --- Header (for Overview) --- */
+  color: #5a5a7d;
+}
+
+/* --- KPI Section (for Overview) --- */
+.kpi-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.kpi-card {
+  flex: 1 1 220px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(138, 99, 210, 0.08);
+  border: 1px solid #ebeef3;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(138, 99, 210, 0.15);
+}
+
+.kpi-card h3 {
+  color: #8a63d2;
+  font-size: 1.1rem;
+}
+
+.kpi-card p {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #4a4762;
+}
+
+/* --- Panel Base Styles --- */
+/* Applying shared styles to all content panels */
+.attendance-panel,
+.student-roster,
+.leave-management,
+.exam-overview-panel,
+.academic-overview,
+.edit-student-panel,
+.event-management-panel {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+  border: 1px solid #f0eefc;
+  /* Subtle border */
+  animation: fadeIn 0.4s ease-in;
+  margin-bottom: 2rem;
+  /* Space between panels */
+}
+
+.attendance-panel h2,
+.student-roster h2,
+.leave-management h2,
+.exam-overview-panel h2,
+.academic-overview .overview-header h2,
+.edit-student-panel h2,
+.event-management-panel h2 {
+  color: #8a63d2;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #8a63d2;
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+
+/* --- Attendance Panel --- */
+.attendance-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.attendance-controls input[type='date'] {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  transition: all 0.2s ease;
+}
+
+.attendance-controls input[type='date']:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.attendance-controls button {
+  background-color: #8a63d2;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attendance-controls button:hover {
+  background-color: #714dbf;
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.3);
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  color: #4a4762;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.attendance-table select {
+  background-color: #fdfdff;
+  border: 1px solid #d1c7f3;
+  border-radius: 8px;
+  padding: 8px;
+  color: #4a4762;
+}
+
+/* --- Student Roster --- */
+.roster-search {
+  margin-bottom: 1.5rem;
+}
+
+.roster-search input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.roster-search input:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  /* space between rows */
+}
+
+.roster-table th,
+.roster-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.roster-table th {
+  color: #8a63d2;
+  font-weight: 600;
+  background-color: #faf9ff;
+  text-align: left;
+}
+
+.roster-table tr:hover td {
+  background-color: #f9f7ff;
+}
+
+/* --- NEW: Edit Student Modal --- */
+.edit-student-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(138, 99, 210, 0.2);
+  max-width: 500px;
+  width: 90%;
+  border: 1px solid #e6d9f6;
+}
+
+.modal-content h2 {
+  color: #8a63d2;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: #4a4762;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.input-disabled {
+  background-color: #f0eefc !important;
+  color: #999 !important;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* --- Attendance Button Styles --- */
+.mark-btn-success {
+  background-color: #68d3b1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.mark-btn-success:hover {
+  background-color: #54b998;
+  box-shadow: 0 4px 10px rgba(104, 211, 177, 0.3);
+}
+
+.mark-btn-danger {
+  background-color: #e57373;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.mark-btn-danger:hover {
+  background-color: #d85c5c;
+  box-shadow: 0 4px 10px rgba(229, 115, 115, 0.3);
+}
+
+.save-btn {
+  background-color: #8a63d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.save-btn:hover {
+  background-color: #714dbf;
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.3);
+}
+
+/* --- Status Select Dropdown --- */
+.status-select {
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 2px rgba(138, 99, 210, 0.1);
+  outline: none;
+}
+
+/* --- Sortable Table Headers --- */
+.roster-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 20px;
+}
+
+.roster-table th.sortable:hover {
+  color: #7a4dbe;
+  background-color: #f5f1ff;
+}
+
+.roster-table th.sortable::after {
+  content: " ↕";
+  font-size: 0.8em;
+  opacity: 0.5;
+  position: absolute;
+  right: 5px;
+}
+
+/* --- Attendance Note --- */
+.attendance-note {
+  background: #f0eefc;
+  border-left: 4px solid #8a63d2;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  color: #4a4762;
+}
+
+.attendance-note p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* --- Marks Table --- */
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  color: #4a4762;
+  font-size: 0.95rem;
+}
+
+.marks-table th,
+.marks-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.marks-table th {
+  color: #8a63d2;
+  font-weight: 600;
+  background-color: #faf9ff;
+  font-size: 0.9rem;
+}
+
+.marks-table tr:hover td {
+  background-color: #f9f7ff;
+}
+
+.marks-table td {
+  vertical-align: middle;
+}
+
+/* --- No Data Message --- */
+.no-data-message {
+  text-align: center;
+  padding: 2rem;
+  background: #f9f7ff;
+  border-radius: 12px;
+  border: 1px dashed #d1c7f3;
+  color: #8a63d2;
+  font-weight: 500;
+}
+
+
+/* --- Leave Management & Event Management --- */
+.leave-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leave-table th,
+.leave-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.leave-table th {
+  color: #8a63d2;
+  font-weight: 600;
+  background-color: #faf9ff;
+}
+
+.leave-table tr:hover td {
+  background-color: #f9f7ff;
+}
+
+.leave-table td button {
+  margin-right: 8px;
+}
+
+
+/* --- NEW: Event Management Panel --- */
+.event-management-panel .attendance-controls input {
+  flex: 1;
+  min-width: 150px;
+}
+
+
+/* --- Approve / Reject Buttons --- */
+.approve-btn {
+  background-color: #68d3b1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.approve-btn:hover {
+  background-color: #54b998;
+}
+
+.reject-btn {
+  background-color: #e57373;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.reject-btn:hover {
+  background-color: #d85c5c;
+}
+
+.approve-btn:disabled,
+.reject-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+/* --- Exam Marks Overview --- */
+.exam-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.exam-filter label {
+  font-weight: 500;
+  color: #4a4762;
+}
+
+.exam-filter select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  transition: all 0.2s ease;
+}
+
+.exam-filter select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.exam-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #4a4762;
+}
+
+.exam-table th,
+.exam-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.exam-table th {
+  color: #8a63d2;
+  background-color: #faf8ff;
+}
+
+.exam-table tr:hover {
+  background-color: #f9f6ff;
+}
+
+
+/* --- Academic Overview Section --- */
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: #4a4762;
+}
+
+.filter-container label {
+  font-weight: 600;
+}
+
+.filter-container select {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  transition: all 0.3s ease;
+}
+
+.filter-container select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.overview-card {
+  background-color: #fdfdff;
+  border: 1px solid #e8e3f6;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.08);
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(138, 99, 210, 0.15);
+  border-color: #c6b2f0;
+}
+
+.overview-card h3 {
+  color: #8a63d2;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.marks-info {
+  margin-bottom: 0.8rem;
+}
+
+.marks-info p {
+  color: #4a4762;
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.last-updated {
+  color: #777398;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Academic Filter Box */
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #faf9ff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e6e0fb;
+  margin-bottom: 1.3rem;
+  width: fit-content;
+}
+
+.filter-box label {
+  font-weight: 600;
+  color: #7a5bd7;
+  font-size: 0.95rem;
+}
+
+/* Styled Dropdown */
+.styled-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #c9bdf3;
+  background: #ffffff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #4a4762;
+}
+
+.styled-select:hover {
+  border-color: #8a63d2;
+  box-shadow: 0 0 5px rgba(138, 99, 210, 0.25);
+}
+
+.styled-select:focus {
+  outline: none;
+  border-color: #8a63d2;
+  box-shadow: 0 0 8px rgba(138, 99, 210, 0.3);
+}
+
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive (for smaller screens) --- */
+@media (max-width: 1200px) {
+  .teacher-dashboard-layout {
+    flex-direction: column;
+  }
+
+  .teacher-sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .teacher-sidebar .sidebar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .teacher-content-area {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-container {
+    width: 100%;
+  }
+
+  .filter-container select {
+    width: 100%;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-section {
+    flex-direction: column;
+  }
+}
+
+/* ============================
+   TOP NAV — Logout Button
+============================ */
+.top-nav {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+}
+
+.logout-btn {
+  background: #ffffff;
+  border: 1px solid #e4d9ff;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: #8a63d2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #f5efff;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.2);
+}
+
+/* Material icon alignment */
+.logout-btn .material-icons {
+  font-size: 20px;
+  transform: translateY(1px);
+}
+
+/* ============================
+   MANAGE CLASS DROPDOWN
+============================ */
+.sidebar-header select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #d6c8f7;
+  background: #f9f7ff;
+  font-weight: 600;
+  color: #6a5b9a;
+  transition: 0.3s;
+}
+
+.sidebar-header select:focus {
+  border-color: #8a63d2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+}
+
+/* label style */
+.sidebar-header label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6f61a8;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Center logo/title + dropdown nicely */
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* ============================
+   PROFILE PAGE STYLES
+============================ */
+
+.profile-panel {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 6px 18px rgba(138, 99, 210, 0.12);
+  border: 1px solid #ece6ff;
+  animation: fadeIn 0.4s ease-in;
+  max-width: 650px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #7c4dff;
+  /* pastel purple */
+}
+
+.profile-icon {
+  font-size: 34px;
+  color: #7c4dff;
+}
+
+.profile-row {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.profile-row strong {
+  width: 160px;
+  color: #4a3f75;
+  font-weight: 600;
+}
+
+.profile-divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #e8e4ff;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.profile-stat-box {
+  flex: 1;
+  text-align: center;
+  background: #f7f3ff;
+  border-radius: 14px;
+  padding: 15px;
+  border: 1px solid #e4d9ff;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+}
+
+.profile-stat-box small {
+  display: block;
+  font-size: 0.85rem;
+  color: #7771a4;
+  margin-bottom: 5px;
+}
+
+.profile-stat-box strong {
+  font-size: 1.4rem;
+  color: #4a406e;
+  font-weight: 700;
+}
+
+/* Responsive Profile Box */
+@media (max-width: 600px) {
+  .profile-stat-box {
+    padding: 10px;
+  }
+
+  .profile-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .profile-row strong {
+    width: auto;
+  }
+}

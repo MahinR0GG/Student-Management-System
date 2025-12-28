@@ -1,0 +1,169 @@
+/* ===============================
+   IMPORT GOOGLE FONT
+   =============================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* ===============================
+   GLOBAL BACKGROUND STYLING
+   =============================== */
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6) url('/assets/Startupbackground.jpg') no-repeat center center fixed;
+  background-size: cover;
+  overflow: hidden;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* ===============================
+   DARK TRANSPARENT OVERLAY
+   =============================== */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+}
+
+/* ===============================
+   CENTERED CONTENT BOX
+   =============================== */
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  padding: 70px 90px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+  animation: slideUpFade 1s ease-out;
+}
+
+.content:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 45px rgba(255, 255, 255, 0.2);
+}
+
+/* ===============================
+   TEXT STYLING
+   =============================== */
+.content h1 {
+  font-size: 46px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  letter-spacing: 1px;
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.content p {
+  font-size: 22px;
+  color: #f1f1f1;
+  margin-bottom: 45px;
+  font-weight: 300;
+}
+
+/* ===============================
+   BUTTONS STYLING
+   =============================== */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 25px;
+}
+
+.btn {
+  padding: 14px 45px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  letter-spacing: 0.5px;
+}
+
+/* Login Button */
+.btn.login {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  box-shadow: 0 4px 10px rgba(25, 118, 210, 0.4);
+}
+
+.btn.login:hover {
+  background: linear-gradient(135deg, #1565c0, #1e88e5);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 0 25px rgba(66, 165, 245, 0.8);
+}
+
+/* Register Button */
+/* .btn.register {
+  background: transparent;
+  border: 2px solid whitesmoke;
+  color: white;
+} */
+
+.btn.register:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+   =============================== */
+@media (max-width: 768px) {
+  .content {
+    padding: 40px 50px;
+  }
+  .content h1 {
+    font-size: 30px;
+  }
+  .content p {
+    font-size: 16px;
+  }
+  .button-group {
+    flex-direction: column;
+    gap: 25px;
+  }
+  .btn {
+    padding: 12px 30px;
+    font-size: 16px;
+  }
+}
+
+/* ===============================
+   ANIMATIONS
+   =============================== */
+@keyframes slideUpFade {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px #42a5f5, 0 0 20px #42a5f5;
+  }
+  50% {
+    text-shadow: 0 0 20px #90caf9, 0 0 40px #90caf9;
+  }
+}

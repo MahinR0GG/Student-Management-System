@@ -1,0 +1,220 @@
+/* ===============================
+   FONT & BACKGROUND
+   =============================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Poppins', sans-serif;
+  background: rgba(0, 0, 0, 0.7) url('/assets/Startupbackground.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===============================
+   DARK OVERLAY
+   =============================== */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 0;
+}
+
+/* ===============================
+   PERFECT CENTER BOX
+   =============================== */
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 400px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  padding: 60px 45px;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  animation: slideUpFade 0.8s ease;
+}
+
+/* ===============================
+   HEADER TEXT
+   =============================== */
+.login-container h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  animation: glowPulse 2s infinite ease-in-out;
+}
+
+.login-container p {
+  font-size: 16px;
+  color: #d3d3d3;
+  margin-bottom: 35px;
+}
+
+/* ===============================
+   INPUT FIELDS
+   =============================== */
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.input-group select option {
+  background-color: #1c1f26;
+  color: #fff;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #42a5f5;
+  box-shadow: 0 0 15px rgba(66, 165, 245, 0.6);
+  transform: scale(1.02);
+}
+
+/* ===============================
+   TEACHER EXTRA FIELDS
+   =============================== */
+.teacher-options {
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 20px rgba(66, 165, 245, 0.15);
+  animation: fadeInFields 0.4s ease-in-out;
+  text-align: left;
+}
+
+.teacher-options label {
+  display: block;
+  font-size: 15px;
+  color: #d3e6ff;
+  font-weight: 500;
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+
+.teacher-options select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.teacher-options select:focus {
+  border-color: #42a5f5;
+  box-shadow: 0 0 12px rgba(66, 165, 245, 0.6);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Sub-field animation */
+@keyframes fadeInFields {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   LOGIN BUTTON
+   =============================== */
+.btn.login {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(66, 165, 245, 0.5);
+  margin-top: 10px;
+}
+
+.btn.login:hover {
+  background: linear-gradient(135deg, #64b5f6, #1565c0);
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(100, 181, 246, 0.8);
+}
+
+/* ===============================
+   ANIMATIONS
+   =============================== */
+@keyframes slideUpFade {
+  from {
+    transform: translate(-50%, -40%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px #42a5f5, 0 0 20px #42a5f5;
+  }
+  50% {
+    text-shadow: 0 0 25px #90caf9, 0 0 40px #90caf9;
+  }
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+@media (max-width: 500px) {
+  .login-container {
+    width: 90%;
+    padding: 40px 25px;
+  }
+
+  .teacher-options {
+    padding: 12px;
+  }
+
+  .teacher-options select {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,72 @@
+<div class="events-admin">
+  <h2>Manage Events</h2>
+
+  <form (ngSubmit)="save()" class="event-form">
+    <div class="row">
+      <label>Title</label>
+      <input [(ngModel)]="form.title" name="title" required />
+    </div>
+
+    <div class="row">
+      <label>Description</label>
+      <textarea [(ngModel)]="form.description" name="description"></textarea>
+    </div>
+
+    <div class="row">
+      <label>Date</label>
+      <input type="date" [(ngModel)]="form.date" name="date" required />
+    </div>
+
+    <div class="row">
+      <label>Audience</label>
+      <select [(ngModel)]="form.audience" name="audience">
+        <option value="ALL">All Students</option>
+        <option value="CLASS">Specific Class</option>
+      </select>
+    </div>
+
+    <div class="row" *ngIf="form.audience === 'CLASS'">
+      <label>Class Name</label>
+      <input [(ngModel)]="form.className" name="className" placeholder="e.g., 10th Standard" />
+    </div>
+
+    <div class="row" *ngIf="form.audience === 'CLASS'">
+      <label>Division (optional)</label>
+      <input [(ngModel)]="form.division" name="division" placeholder="e.g., A/B/C" />
+    </div>
+
+    <div class="row">
+      <button type="submit">{{ isEditing ? 'Update' : 'Create' }}</button>
+      <button type="button" (click)="resetForm()">Clear</button>
+    </div>
+  </form>
+
+  <hr />
+
+  <h3>Events</h3>
+  <table class="events-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Audience</th>
+        <th>Class</th>
+        <th>Division</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ev of events">
+        <td>{{ ev.title }}</td>
+        <td>{{ ev.date | date }}</td>
+        <td>{{ ev.audience }}</td>
+        <td>{{ ev.className || '-' }}</td>
+        <td>{{ ev.division || '-' }}</td>
+        <td>
+          <button (click)="edit(ev)">Edit</button>
+          <button (click)="remove(ev)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,39 @@
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">School Admin</div>
+
+    <nav class="menu">
+      <a routerLink="/admin-dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        📊 Dashboard Overview
+      </a>
+      <a routerLink="/admin-dashboard/manage-users" routerLinkActive="active">👩‍🏫 Manage Users</a>
+      <a routerLink="/admin-dashboard/manage-classes" routerLinkActive="active">🏫 Manage Classes</a>
+      <a routerLink="/admin-dashboard/subjects" routerLinkActive="active">📚 Subjects</a>
+      <a routerLink="/admin-dashboard/attendance" routerLinkActive="active">🗓 Attendance</a>
+      <a routerLink="/admin-dashboard/leave-requests" routerLinkActive="active">📩 Leave Requests</a>
+      <a routerLink="/admin-dashboard/events" routerLinkActive="active">🎉 Events</a>
+    </nav>
+  </aside>
+
+  <!-- Content Area -->
+  <main class="content">
+    <header class="topbar">
+      <h1>Admin Dashboard</h1>
+      <div class="admin-info">
+        <span>Welcome, Admin 👋</span>
+
+        <!-- ✅ Top Right Logout -->
+        <button class="logout-top-btn" (click)="logout()">
+          <span class="material-icons">logout</span>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- ✅ Main content area for child routes -->
+    <section class="content-card">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

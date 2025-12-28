@@ -1,0 +1,59 @@
+<div class="role-select-wrapper">
+
+  <!-- Top Navigation with Logout -->
+  <div class="top-nav">
+    <div class="brand">
+      <span class="material-icons">school</span>
+      <span>Student Management System</span>
+    </div>
+    <button class="logout-btn" (click)="logout()">
+      <span class="material-icons">logout</span> Logout
+    </button>
+  </div>
+
+  <div class="content-container">
+    <div class="header-section">
+      <h1>Welcome back, {{ user.name }}! 👋</h1>
+      <p>Please select your dashboard to continue</p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Class Teacher Card -->
+      <div class="role-card class-teacher-card" (click)="goToClassTeacher()" [class.disabled]="!isClassTeacher">
+        <div class="card-icon">
+          <span class="material-icons">person_outline</span>
+        </div>
+        <div class="card-content">
+          <h3>Class Teacher</h3>
+          <p>Manage attendance, student roster, leaves, and class reports.</p>
+          <div class="status-badge" *ngIf="isClassTeacher">
+            <span class="material-icons">check_circle</span> Assigned
+          </div>
+          <div class="status-badge not-assigned" *ngIf="!isClassTeacher">
+            <span class="material-icons">block</span> Not Assigned
+          </div>
+        </div>
+        <div class="card-arrow">
+          <span class="material-icons">arrow_forward</span>
+        </div>
+      </div>
+
+      <!-- Subject Teacher Card -->
+      <div class="role-card subject-teacher-card" (click)="goToSubjectTeacher()">
+        <div class="card-icon">
+          <span class="material-icons">menu_book</span>
+        </div>
+        <div class="card-content">
+          <h3>Subject Teacher</h3>
+          <p>Update exam marks, manage assignments, and upload resources.</p>
+          <div class="status-badge">
+            <span class="material-icons">check_circle</span> Active
+          </div>
+        </div>
+        <div class="card-arrow">
+          <span class="material-icons">arrow_forward</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

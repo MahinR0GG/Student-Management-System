@@ -1,0 +1,149 @@
+<div class="manage-classes">
+
+  <h2 class="title">🏫 Manage Classes</h2>
+
+  <!-- 🔍 Search + Add -->
+  <div class="filter-bar">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search by class or teacher..." class="search-box" />
+    <button class="add-btn" (click)="openAddModal()">➕ Add Class</button>
+  </div>
+
+  <!-- 📋 Table -->
+  <div class="table-wrapper" *ngIf="filteredClasses.length > 0; else noData">
+    <table class="class-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Class</th>
+          <th>Class Teacher</th>
+          <th>Teacher's Subject</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let c of filteredClasses; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ c.class_number || c.classNumber }}{{ c.division }}</td>
+          <td>{{ c.class_teacher_name || c.classTeacher || '-' }}</td>
+          <td>{{ getTeacherSubject(c.class_teacher || c.classTeacherId) || '-' }}</td>
+          <td>
+            <button class="edit-btn" (click)="openEditModal(c)">✏️ Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noData>
+    <p class="empty">No classes yet 😕</p>
+  </ng-template>
+
+  <!-- ✅ ADD CLASS MODAL -->
+  <div class="modal-backdrop" *ngIf="showAddModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add New Class</h3>
+        <button class="close-btn" (click)="closeModal()">✖</button>
+      </div>
+
+      <form (ngSubmit)="createClass()" class="modal-body">
+
+        <!-- ✅ CLASS NUMBER -->
+        <div class="form-group">
+          <label>Class Number</label>
+          <select [(ngModel)]="newClass.classNumber" name="classNumber" required>
+            <option [ngValue]="null" disabled>Select Class</option>
+            <option [ngValue]="8">8</option>
+            <option [ngValue]="9">9</option>
+            <option [ngValue]="10">10</option>
+          </select>
+        </div>
+
+        <!-- ✅ DIVISION -->
+        <div class="form-group">
+          <label>Division</label>
+          <select [(ngModel)]="newClass.division" name="division" required>
+            <option [ngValue]="''" disabled>Select Division</option>
+            <option [ngValue]="'A'">A</option>
+            <option [ngValue]="'B'">B</option>
+            <option [ngValue]="'C'">C</option>
+          </select>
+        </div>
+
+        <!-- ✅ CLASS TEACHER -->
+        <div class="form-group">
+          <label>Class Teacher</label>
+          <select [(ngModel)]="newClass.classTeacherId" name="classTeacherId" required>
+            <option [ngValue]="null" disabled>Select Teacher</option>
+            <option *ngFor="let t of teachers" [ngValue]="t.id">
+              {{ t.name }} ({{ t.subject }})
+            </option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="create-btn">Create Class</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ EDIT CLASS MODAL -->
+  <div class="modal-backdrop" *ngIf="showEditModal">
+    <div class="modal edit-modal">
+      <div class="modal-header">
+        <h3>✏️ Edit Class: {{ selectedClass?.class_number || selectedClass?.classNumber }}{{ selectedClass?.division }}
+        </h3>
+        <button class="close-btn" (click)="closeEditModal()">✖</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Assigned Subjects List -->
+        <div class="subjects-section">
+          <h4>📚 Assigned Subjects</h4>
+          <div class="subjects-list" *ngIf="classSubjects.length > 0; else noSubjects">
+            <div class="subject-item" *ngFor="let subject of classSubjects">
+              <div class="subject-info">
+                <span class="subject-name">{{ subject.name }}</span>
+                <span class="teacher-name">{{ subject.teacher_name || 'No teacher assigned' }}</span>
+              </div>
+              <button class="remove-btn" (click)="removeSubject(subject.id)">🗑️ Remove</button>
+            </div>
+          </div>
+          <ng-template #noSubjects>
+            <p class="empty-message">No subjects assigned yet</p>
+          </ng-template>
+        </div>
+
+        <!-- Add New Subject Form -->
+        <div class="add-subject-section">
+          <h4>➕ Add New Subject</h4>
+          <div class="form-group">
+            <label>Subject Name</label>
+            <input type="text" [(ngModel)]="newSubject.name" placeholder="e.g., Mathematics" />
+          </div>
+
+          <div class="form-group">
+            <label>Select Teacher</label>
+            <select [(ngModel)]="newSubject.teacher">
+              <option [ngValue]="null">Select a teacher</option>
+              <option *ngFor="let t of teachers" [ngValue]="t.id">
+                {{ t.name }} ({{ t.subject || 'No subject' }})
+              </option>
+            </select>
+          </div>
+
+          <button class="add-subject-btn" (click)="assignSubject()">Add Subject</button>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeEditModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

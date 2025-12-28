@@ -1,0 +1,468 @@
+/* =========================================
+   SUBJECT TEACHER DASHBOARD STYLES
+========================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #ffffff;
+  padding: 2rem;
+  color: #4a4762;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Layout */
+.teacher-dashboard-layout {
+  display: flex;
+  gap: 2rem;
+}
+
+/* ===============================
+   SIDEBAR
+=============================== */
+.teacher-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(138, 99, 210, 0.08);
+  border: 1px solid #f0eefc;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.teacher-sidebar .sidebar-header {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #f0eefc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.teacher-sidebar .sidebar-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8a63d2;
+}
+
+/* ✅ Manage Class Dropdown */
+.teacher-sidebar label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6f61a8;
+  margin-top: 6px;
+}
+
+.teacher-sidebar select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #d6c8f7;
+  background: #f9f7ff;
+  font-weight: 600;
+  color: #6a5b9a;
+  transition: 0.3s ease;
+}
+
+.teacher-sidebar select:focus {
+  border-color: #8a63d2;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.2);
+}
+
+/* Sidebar navigation */
+.teacher-sidebar .sidebar-nav {
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+  flex: 1;
+}
+
+.teacher-sidebar .sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #4a4762;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.teacher-sidebar .sidebar-nav li a:hover {
+  background: #f8f6ff;
+  color: #8a63d2;
+}
+
+.teacher-sidebar .sidebar-nav li a.active {
+  background: #8a63d2;
+  color: white;
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.4);
+}
+
+.teacher-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===============================
+   TOP NAV — LOGOUT BUTTON
+=============================== */
+.top-nav {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+}
+
+.logout-btn {
+  background: #ffffff;
+  border: 1px solid #e4d9ff;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: #8a63d2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #f5efff;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.2);
+}
+
+.logout-btn .material-icons {
+  font-size: 20px;
+  transform: translateY(1px);
+}
+
+/* ===============================
+   OVERVIEW & DASHBOARD STYLES
+=============================== */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #8a63d2;
+}
+
+.dashboard-header p {
+  font-size: 1rem;
+  color: #5a5a7d;
+}
+
+.kpi-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.kpi-card {
+  flex: 1 1 220px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(138, 99, 210, 0.08);
+  border: 1px solid #ebeef3;
+}
+
+.kpi-card h3 {
+  color: #8a63d2;
+  font-size: 1.1rem;
+}
+
+.kpi-card p {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #4a4762;
+}
+
+/* ===============================
+   PANELS & TABLES
+=============================== */
+.exam-overview-panel,
+.event-management-panel,
+.student-roster {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(138, 99, 210, 0.1);
+  border: 1px solid #f0eefc;
+  animation: fadeIn 0.4s ease-in;
+  margin-bottom: 2rem;
+}
+
+.exam-overview-panel h2,
+.event-management-panel h2,
+.student-roster h2 {
+  color: #8a63d2;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #8a63d2;
+  padding-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+/* --- Shared Inputs & Buttons --- */
+.attendance-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.attendance-controls input[type='date'],
+.attendance-controls input[type='text'],
+.attendance-controls input[type='url'],
+.attendance-controls select {
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1c7f3;
+  background-color: #fdfdff;
+  color: #4a4762;
+  font-size: 0.95rem;
+  flex: 1;
+  transition: 0.2s;
+}
+
+.attendance-controls input:focus,
+.attendance-controls select:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+.attendance-controls button {
+  background-color: #8a63d2;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attendance-controls button:hover {
+  background-color: #714dbf;
+  box-shadow: 0 4px 10px rgba(138, 99, 210, 0.3);
+}
+
+/* Table styling */
+.leave-table,
+.exam-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #4a4762;
+}
+
+.leave-table th,
+.leave-table td,
+.exam-table th,
+.exam-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.leave-table th,
+.exam-table th {
+  color: #8a63d2;
+  font-weight: 600;
+  background-color: #faf9ff;
+}
+
+.leave-table tr:hover td,
+.exam-table tr:hover td {
+  background-color: #f9f7ff;
+}
+
+.leave-table td button {
+  margin-right: 8px;
+}
+
+/* Marks Input */
+.marks-input {
+  width: 80px;
+  padding: 0.5rem;
+  border: 1px solid #d1c7f3;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.marks-input:focus {
+  border-color: #8a63d2;
+  box-shadow: 0 0 0 3px rgba(138, 99, 210, 0.15);
+  outline: none;
+}
+
+/* Buttons */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.approve-btn {
+  background-color: #68d3b1;
+  color: white;
+}
+
+.reject-btn {
+  background-color: #e57373;
+  color: white;
+}
+
+.approve-btn:hover {
+  background-color: #54b998;
+}
+
+.reject-btn:hover {
+  background-color: #d85c5c;
+}
+
+/* Resource Links */
+.resource-link {
+  color: #8a63d2;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background: #f8f6ff;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.resource-link:hover {
+  background: #8a63d2;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(138, 99, 210, 0.3);
+}
+
+.no-link {
+  color: #a0aec0;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   EXAM DROPDOWN
+=============================== */
+.exam-filter {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.exam-dropdown {
+  position: relative;
+  width: 260px;
+  background: #fdfdff;
+  border: 1px solid #d1c7f3;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(138, 99, 210, 0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.exam-dropdown:hover {
+  box-shadow: 0 6px 16px rgba(138, 99, 210, 0.15);
+}
+
+.selected-exam {
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-exam .exam-tag {
+  color: #8a63d2;
+  font-weight: 600;
+}
+
+.selected-exam .arrow {
+  color: #8a63d2;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.selected-exam .arrow.open {
+  transform: rotate(180deg);
+}
+
+.exam-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0dbf5;
+  box-shadow: 0 6px 18px rgba(138, 99, 210, 0.15);
+  margin-top: 5px;
+  z-index: 10;
+  list-style: none;
+  padding: 0.5rem;
+}
+}
+
+.teacher-sidebar {
+  width: 100%;
+  height: auto;
+}
+
+.teacher-sidebar .sidebar-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+}
+
+@media (max-width: 768px) {
+  .kpi-section {
+    flex-direction: column;
+  }
+
+  .attendance-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .attendance-controls input,
+  .attendance-controls button {
+    width: 100%;
+  }
+}

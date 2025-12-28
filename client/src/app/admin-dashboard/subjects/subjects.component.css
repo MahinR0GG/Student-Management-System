@@ -1,0 +1,131 @@
+.subjects-container {
+  padding: 20px;
+  background: #f7f8fc;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4a4762;
+}
+
+.subtitle {
+  margin-bottom: 20px;
+  color: #7b7a92;
+}
+
+/* ✅ Cards */
+.form-card,
+.table-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  border: 1px solid #ececf6;
+  box-shadow: 0 6px 25px rgba(138, 99, 210, 0.08);
+}
+
+.section-title {
+  color: #6b4cd9;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* ✅ Form Layout */
+.form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+input,
+select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cfcdfb;
+  background: #fafaff;
+  flex: 1;
+  min-width: 200px;
+  font-size: 14px;
+}
+
+input:disabled,
+.subject-display {
+  background: #f0f0f5;
+  color: #666;
+  cursor: not-allowed;
+  border-color: #ddd;
+}
+
+/* ✅ Buttons */
+.add-btn {
+  background: #6b4cd9;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-btn:hover:not(:disabled) {
+  background: #5a3fc7;
+}
+
+.add-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.delete-btn {
+  background: #ff6b6b;
+  border: none;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #e14b4b;
+}
+
+/* ✅ Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th,
+td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+th {
+  color: #6b4cd9;
+  font-weight: 600;
+}
+
+/* ✅ Empty message */
+.empty {
+  text-align: center;
+  margin-top: 20px;
+  color: #888;
+}
+
+/* ✅ Success & Error */
+.success {
+  color: #28a745;
+  margin-top: 10px;
+}
+
+.error {
+  color: #e14b4b;
+  margin-top: 10px;
+}

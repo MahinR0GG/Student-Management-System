@@ -1,0 +1,147 @@
+<div class="attendance-container">
+
+  <h2 class="title">📋 Attendance Management</h2>
+
+  <!-- ✅ Class Selection -->
+  <div class="class-selector">
+    <h3>Select Class to View/Mark Attendance</h3>
+    <div class="selector-row">
+      <select [(ngModel)]="selectedClassId" (change)="onClassChange()">
+        <option [ngValue]="null">-- Select a Class --</option>
+        <option *ngFor="let c of allClasses" [ngValue]="c.id">
+          {{ c.class_number || c.classNumber }}{{ c.division }}
+        </option>
+      </select>
+
+      <input type="date" [(ngModel)]="selectedDate" (change)="loadAttendanceForDate()" />
+
+      <button class="refresh-btn" (click)="loadAttendanceForDate()" *ngIf="selectedClassId">
+        🔄 Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ Students Table with Attendance -->
+  <div class="students-table" *ngIf="selectedClassId && classStudents.length > 0">
+    <div class="table-header">
+      <h3>Students in Class {{ getClassName() }} - {{ selectedDate }}</h3>
+      <button class="save-all-btn" (click)="saveAllAttendance()">💾 Save All Attendance</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student Name</th>
+          <th>Roll No</th>
+          <th>Status</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let student of classStudents; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.id }}</td>
+          <td>
+            <select [(ngModel)]="attendanceMap[student.id]" class="status-select">
+              <option value="Present">✅ Present</option>
+              <option value="Absent">❌ Absent</option>
+            </select>
+          </td>
+          <td>{{ getLastMarkedTime(student.id) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Empty State -->
+  <div class="empty-state" *ngIf="selectedClassId && classStudents.length === 0">
+    <p>No students found in this class.</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!selectedClassId">
+    <p>👆 Please select a class to view and mark attendance</p>
+  </div>
+
+  <!-- ✅ Attendance History -->
+  <div class="history-section" *ngIf="selectedClassId">
+    <h3>📊 Attendance History</h3>
+
+    <div class="filters">
+      <input type="date" [(ngModel)]="historyDateFrom" placeholder="From Date" />
+      <input type="date" [(ngModel)]="historyDateTo" placeholder="To Date" />
+      <button class="filter-btn" (click)="loadAttendanceHistory()">View History</button>
+    </div>
+
+    <div class="stats-row" *ngIf="attendanceHistory.length > 0">
+      <div class="stat-box present">
+        <h3>{{ historyPresentCount }}</h3>
+        <p>Present</p>
+      </div>
+
+      <div class="stat-box absent">
+        <h3>{{ historyAbsentCount }}</h3>
+        <p>Absent</p>
+      </div>
+
+      <div class="stat-box total">
+        <h3>{{ attendanceHistory.length }}</h3>
+        <p>Total Records</p>
+      </div>
+    </div>
+
+    <table *ngIf="attendanceHistory.length > 0">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Student</th>
+          <th>Status</th>
+          <th>Marked By</th>
+          <th>Updated By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of attendanceHistory">
+          <td>{{ record.date }}</td>
+          <td>{{ record.student_name }}</td>
+          <td>
+            <!-- Show dropdown if editing, otherwise show tag -->
+            <select *ngIf="editingRecordId === record.id" [(ngModel)]="editingStatus" class="status-select-inline">
+              <option value="Present">✅ Present</option>
+              <option value="Absent">❌ Absent</option>
+            </select>
+            <span *ngIf="editingRecordId !== record.id" class="tag" [ngClass]="record.status.toLowerCase()">
+              {{ record.status }}
+            </span>
+          </td>
+          <td>{{ record.marked_by || 'Admin' }}</td>
+          <td>
+            <span *ngIf="record.updated_by" class="updated-badge">
+              {{ record.updated_by }}
+            </span>
+            <span *ngIf="!record.updated_by" class="no-edit">-</span>
+          </td>
+          <td>
+            <!-- Edit mode buttons -->
+            <div *ngIf="editingRecordId === record.id" class="action-buttons">
+              <button class="save-btn-small" (click)="saveEdit(record)">💾 Save</button>
+              <button class="cancel-btn-small" (click)="cancelEdit()">❌ Cancel</button>
+            </div>
+            <!-- Normal mode button -->
+            <button *ngIf="editingRecordId !== record.id" class="edit-btn-small" (click)="editAttendance(record)">
+              ✏️ Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="empty" *ngIf="attendanceHistory.length === 0 && historyDateFrom">
+      No attendance records found for the selected date range.
+    </p>
+  </div>
+
+</div>
